@@ -3,113 +3,104 @@ import {
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 
-import { CTA } from "../components";
-import { experiences, skills } from "../constants";
+import { experiences, skills, categoryAccent } from "../constants";
+import { Footer } from "../components";
 
 import "react-vertical-timeline-component/style.min.css";
 
 const About = () => {
   return (
-    <section className='max-container'>
-      <h1 className='head-text'>
-        Hello, I'm{" "}
-        <span className='blue-gradient_text font-semibold drop-shadow'>
-          {" "}
-          Adrian
-        </span>{" "}
-        👋
-      </h1>
+    <main className="bg-primary min-h-screen pt-24">
+      <section className='section-container'>
+        <p className="section-label">Identity</p>
+        <h1 className='section-title'>
+          Software Engineer & <br />
+          <span className='gradient-text'>AI Systems Architect</span>
+        </h1>
 
-      <div className='mt-5 flex flex-col gap-3 text-slate-500'>
-        <p>
-          Software Engineer based in Croatia, specializing in technical
-          education through hands-on learning and building applications.
-        </p>
-      </div>
-
-      <div className='py-10 flex flex-col'>
-        <h3 className='subhead-text'>My Skills</h3>
-
-        <div className='mt-16 flex flex-wrap gap-12'>
-          {skills.map((skill) => (
-            <div className='block-container w-20 h-20' key={skill.name}>
-              <div className='btn-back rounded-xl' />
-              <div className='btn-front rounded-xl flex justify-center items-center'>
-                <img
-                  src={skill.imageUrl}
-                  alt={skill.name}
-                  className='w-1/2 h-1/2 object-contain'
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className='py-16'>
-        <h3 className='subhead-text'>Work Experience.</h3>
-        <div className='mt-5 flex flex-col gap-3 text-slate-500'>
+        <div className='mt-5 flex flex-col gap-3 section-subtitle'>
           <p>
-            I've worked with all sorts of companies, leveling up my skills and
-            teaming up with smart people. Here's the rundown:
+            Based in Croatia, I specialize in building autonomous systems, 
+            intelligent document processing pipelines, and high-performance full-stack applications.
           </p>
         </div>
 
-        <div className='mt-12 flex'>
-          <VerticalTimeline>
-            {experiences.map((experience, index) => (
-              <VerticalTimelineElement
-                key={experience.company_name}
-                date={experience.date}
-                iconStyle={{ background: experience.iconBg }}
-                icon={
-                  <div className='flex justify-center items-center w-full h-full'>
-                    <img
-                      src={experience.icon}
-                      alt={experience.company_name}
-                      className='w-[60%] h-[60%] object-contain'
-                    />
-                  </div>
-                }
-                contentStyle={{
-                  borderBottom: "8px",
-                  borderStyle: "solid",
-                  borderBottomColor: experience.iconBg,
-                  boxShadow: "none",
-                }}
-              >
-                <div>
-                  <h3 className='text-black text-xl font-poppins font-semibold'>
-                    {experience.title}
-                  </h3>
-                  <p
-                    className='text-black-500 font-medium text-base'
-                    style={{ margin: 0 }}
-                  >
-                    {experience.company_name}
-                  </p>
+        <div className='py-16 flex flex-col'>
+          <h3 className='font-oxanium text-2xl font-bold mb-10'>Technical Arsenal</h3>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {Object.entries(skills).map(([category, techList]) => (
+              <div key={category} className="tech-card">
+                <div className="flex items-center gap-3 mb-4">
+                  <div 
+                    className="w-1.5 h-6 rounded-full" 
+                    style={{ background: categoryAccent[category] === 'violet' ? 'var(--violet)' : 'var(--cyan)' }}
+                  />
+                  <h4 className="font-oxanium font-bold text-sm tracking-widest uppercase opacity-80">{category}</h4>
                 </div>
-
-                <ul className='my-5 list-disc ml-5 space-y-2'>
-                  {experience.points.map((point, index) => (
-                    <li
-                      key={`experience-point-${index}`}
-                      className='text-black-500/50 font-normal pl-1 text-sm'
+                <div className='flex flex-wrap gap-2'>
+                  {techList.map((skill) => (
+                    <span 
+                      key={skill} 
+                      className={`skill-tag ${categoryAccent[category] === 'violet' ? 'skill-tag-violet' : ''}`}
                     >
-                      {point}
-                    </li>
+                      {skill}
+                    </span>
                   ))}
-                </ul>
-              </VerticalTimelineElement>
+                </div>
+              </div>
             ))}
-          </VerticalTimeline>
+          </div>
         </div>
-      </div>
 
-      <hr className='border-slate-200' />
+        <div className='py-16'>
+          <h3 className='font-oxanium text-2xl font-bold mb-4'>Career Trajectory</h3>
+          <div className='mb-12 section-subtitle'>
+            <p>
+              Bridging the gap between systematic communication and complex automation workflows. 
+              Here is how my professional path has evolved:
+            </p>
+          </div>
 
-      <CTA />
-    </section>
+          <div className='mt-12'>
+            <VerticalTimeline lineColor="rgba(0, 212, 255, 0.15)">
+              {experiences.map((experience) => (
+                <VerticalTimelineElement
+                  key={experience.company}
+                  date={experience.date}
+                  iconStyle={{ 
+                    background: experience.iconBg,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem"
+                  }}
+                  icon={<span>{experience.iconEmoji}</span>}
+                >
+                  <div>
+                    <h3 className='font-oxanium font-bold text-xl' style={{ color: "var(--text-primary)" }}>
+                      {experience.title}
+                    </h3>
+                    <p className='font-oxanium font-semibold' style={{ color: experience.iconColor, margin: 0 }}>
+                      {experience.company}
+                    </p>
+                  </div>
+
+                  <ul className='my-5 space-y-2'>
+                    {experience.points.map((point, index) => (
+                      <li key={`point-${index}`} className='text-secondary text-sm flex gap-2'>
+                        <span style={{ color: experience.iconColor }}>▸</span> {point}
+                      </li>
+                    ))}
+                  </ul>
+                </VerticalTimelineElement>
+              ))}
+            </VerticalTimeline>
+          </div>
+        </div>
+      </section>
+      <Footer />
+    </main>
   );
 };
 
