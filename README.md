@@ -11,8 +11,6 @@ This project is a high-performance personal portfolio designed to demonstrate te
 - **Interactive 3D Environments**: 3D hero section featuring a custom Avatar surrounded by orbiting technical models (Neural Networks, Microchips, Server Stacks) representing key competencies.
 - **AI & Automation Showcase**: Specialized sections highlighting expertise in OCR pipelines, LLM-powered agents, and intelligent document parsing.
 - **Engineering Showcase**: A tiered project portfolio detailing core challenges, technical stacks, and performance metrics.
-- **Interactive 3D Island**: A secondary 3D environment with user-controlled rotation and stage-based content navigation.
-- **Responsive Experience**: Fully optimized for mobile, tablet, and desktop viewports.
 - **Integrated Communications**: Functional contact form powered by EmailJS with real-time feedback and interactive character animations (Fox model).
 - **Dynamic Branding**: Automatic SVG favicon generation based on user initials.
 
@@ -61,5 +59,4 @@ This project is a high-performance personal portfolio designed to demonstrate te
 
 - `/src/models/`: React components for GLB/GLTF 3D models.
 - `/src/pages/`: Main application views including the 3D-heavy Home page.
-- `/src/assets/3d models/`: Binary 3D assets (.glb files).
-- `/src/hooks/`: Custom React hooks for alerts and intersection observers.
+- `/src/assets/3d/`: Binary 3D assets (.glb files).raeection observers.

@@ -23,18 +23,18 @@ import {
 // ─────────────────────────────────────────────────────────────
 // 3D HERO CONFIG  — 6 models orbiting the avatar
 // ─────────────────────────────────────────────────────────────
-const ORBIT_MODELS = [
-  { url: "/src/assets/3d models/Neural_Network.glb",     radius: 2.5, speed: 0.30, angleOffset: 0,                     modelScale: 0.32, yAmplitude: 0.45 },
-  { url: "/src/assets/3d models/Circuit_Microchip.glb",  radius: 3.1, speed: 0.22, angleOffset: Math.PI / 3,            modelScale: 0.28, yAmplitude: 0.35 },
-  { url: "/src/assets/3d models/Server_Stack.glb",       radius: 2.3, speed: 0.38, angleOffset: (Math.PI * 2) / 3,     modelScale: 0.26, yAmplitude: 0.55 },
-  { url: "/src/assets/3d models/Database.glb",           radius: 3.3, speed: 0.18, angleOffset: Math.PI,                modelScale: 0.30, yAmplitude: 0.40 },
-  { url: "/src/assets/3d models/Data_Flow_Pipeline.glb", radius: 2.7, speed: 0.28, angleOffset: (Math.PI * 4) / 3,     modelScale: 0.24, yAmplitude: 0.30 },
-  { url: "/src/assets/3d models/Energy_Core.glb",        radius: 2.1, speed: 0.42, angleOffset: (Math.PI * 5) / 3,     modelScale: 0.34, yAmplitude: 0.50 },
+const ORBIT_MODELS = [ // Updated paths to /src/assets/3d/
+  { url: "/src/assets/3d/Neural_Network.glb",     radius: 2.5, speed: 0.30, angleOffset: 0,                     modelScale: 0.32, yAmplitude: 0.45 },
+  { url: "/src/assets/3d/Circuit_Microchip.glb",  radius: 3.1, speed: 0.22, angleOffset: Math.PI / 3,            modelScale: 0.28, yAmplitude: 0.35 },
+  { url: "/src/assets/3d/Server_Stack.glb",       radius: 2.3, speed: 0.38, angleOffset: (Math.PI * 2) / 3,     modelScale: 0.26, yAmplitude: 0.55 },
+  { url: "/src/assets/3d/Database.glb",           radius: 3.3, speed: 0.18, angleOffset: Math.PI,                modelScale: 0.30, yAmplitude: 0.40 },
+  { url: "/src/assets/3d/Data_Flow_Pipeline.glb", radius: 2.7, speed: 0.28, angleOffset: (Math.PI * 4) / 3,     modelScale: 0.24, yAmplitude: 0.30 },
+  { url: "/src/assets/3d/Energy_Core.glb",        radius: 2.1, speed: 0.42, angleOffset: (Math.PI * 5) / 3,     modelScale: 0.34, yAmplitude: 0.50 },
 ];
 
 // Preload to reduce jank
 ORBIT_MODELS.forEach((m) => useGLTF.preload(m.url));
-useGLTF.preload("/src/assets/3d models/avatar.glb");
+useGLTF.preload("/src/assets/3d/avatar.glb");
 
 // Suspense-isolated slot so one bad GLB doesn't kill the scene
 function FloatingIconSlot(props) {
