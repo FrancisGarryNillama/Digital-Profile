@@ -63,7 +63,7 @@ const ORBIT_MODELS = [
 
 // Preload hero models
 ORBIT_MODELS.forEach((m) => useGLTF.preload(m.url));
-useGLTF.preload("/src/assets/3d models/avatar.glb");
+useGLTF.preload("/models/Avatar.glb");
 
 // Preload section models (lazy but early)
 [

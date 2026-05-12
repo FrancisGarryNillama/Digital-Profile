@@ -47,30 +47,36 @@ const App = () => {
 
   return (
     <div ref={containerRef} className="relative w-full">
-      <Router
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-          v7_fetcherPersist: true,
-          v7_normalizeFormMethod: true,
-          v7_partialHydration: true,
-          v7_skipActionErrorRevalidation: true,
-        }}
-      >
-        <Navbar />
-        <Routes>
-          <Route path="/"          element={<Home />} />
-          <Route path="/projects"  element={<Projects />} />
-          <Route path="/contact"   element={<Contact />} />
-          <Route path="/modeltest" element={<ModelTest />} />
-        </Routes>
-      </Router>
+      <div className="relative z-10">
+        <Router
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+            v7_fetcherPersist: true,
+            v7_normalizeFormMethod: true,
+            v7_partialHydration: true,
+            v7_skipActionErrorRevalidation: true,
+          }}
+        >
+          <Navbar />
+          <Routes>
+            <Route path="/"          element={<Home />} />
+            <Route path="/projects"  element={<Projects />} />
+            <Route path="/contact"   element={<Contact />} />
+            <Route path="/modeltest" element={<ModelTest />} />
+          </Routes>
+        </Router>
+      </div>
 
       {/* Single Global Canvas for the entire application */}
       <Canvas
         eventSource={containerRef}
-        className="pointer-events-none fixed inset-0 z-[100]"
+        className="pointer-events-none fixed inset-0 z-0"
         shadows
+        gl={{ alpha: true, antialias: true }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
       >
         <View.Port />
       </Canvas>

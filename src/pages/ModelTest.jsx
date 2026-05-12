@@ -34,7 +34,7 @@ const ModelTest = () => {
     { name: 'Security Lock', url: '/src/assets/3d models/Security_Lock.glb' },
     { name: 'Server Stack', url: '/src/assets/3d models/Server_Stack.glb' },
     { name: 'Spiral Data', url: '/src/assets/3d models/Spiral_Data.glb' },
-    { name: '👤 My Avatar', url: '/src/assets/3d models/avatar.glb' },
+    { name: '👤 My Avatar', url: '/models/Avatar.glb' },
   ];
 
   const [selectedModel, setSelectedModel] = useState(models[0]);

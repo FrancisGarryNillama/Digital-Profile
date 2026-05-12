@@ -15,16 +15,15 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 // 3D Model from: https://sketchfab.com/3d-models/fox-f372c04de44640fbb6a4f9e4e5845c78
 export function Fox({ currentAnimation, ...props }) {
   const group = useRef();
-  const { nodes, materials, animations } = useGLTF("/src/assets/3d models/fox.glb");
+  const { nodes, materials, animations } = useGLTF("/models/fox.glb");
   const { actions } = useAnimations(animations, group);
 
   // This effect will run whenever the currentAnimation prop changes
   useEffect(() => {
-    Object.values(actions).forEach((action) => action.stop());
+    if (!actions) return;
+    Object.values(actions).forEach((action) => action?.stop());
 
-    if (actions[currentAnimation]) {
-      actions[currentAnimation].play();
-    }
+    actions[currentAnimation]?.play();
   }, [actions, currentAnimation]);
 
   return (
@@ -66,4 +65,4 @@ export function Fox({ currentAnimation, ...props }) {
   );
 }
 
-useGLTF("/models/fox.glb");
+useGLTF.preload("/models/fox.glb");
