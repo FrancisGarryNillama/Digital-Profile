@@ -1,5 +1,7 @@
-import { Suspense, useEffect, useRef, useState } from "react";
-import { useGLTF, OrbitControls, Environment, Stage, View } from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import { useGLTF, OrbitControls } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -20,7 +22,7 @@ import {
 } from "../constants";
 
 // ─────────────────────────────────────────────────────────────
-// MODEL PATH MAP — all GLBs from /src/assets/3d/
+// MODEL PATH MAP — GLBs served from public/models/ (URL path /models/...)
 // ─────────────────────────────────────────────────────────────
 const M = {
   futuristicAIBrain:       "/models/Futuristic_AI_Brain.glb",
@@ -80,7 +82,14 @@ useGLTF.preload("/models/Avatar.glb");
 // ─────────────────────────────────────────────────────────────
 function FloatingIconSlot(props) {
   return (
-    <ErrorBoundary fallback={null}>
+    <ErrorBoundary
+      fallback={<ModelFallback scale={0.12} color="#00d4ff" />}
+      onError={(err) => {
+        if (import.meta.env.DEV) {
+          console.warn("[3D] Orbit model failed to load:", props.url, err?.message ?? err);
+        }
+      }}
+    >
       <Suspense fallback={<ModelFallback scale={0.12} color="#00d4ff" />}>
         <FloatingModel {...props} />
       </Suspense>
@@ -97,33 +106,78 @@ function ModelFallback({ position = [0, 0, 0], scale = 0.35, color = "#ff00ff" }
   );
 }
 
-/** Tiny inline 3-D canvas for section decoration */
-function MiniModel({ url, scale = 1.2, autoRotate = true }) {
-  const { scene } = useGLTF(url);
-  return <primitive object={scene} scale={[scale, scale, scale]} />;
+/** Placeholder while mini canvas is off-screen (avoids white “broken” GL areas). */
+function MiniCanvasSlot() {
+  return (
+    <div
+      className="absolute inset-0"
+      style={{
+        background: "linear-gradient(145deg, rgba(3,3,12,0.92) 0%, rgba(15,15,35,0.75) 100%)",
+        border: "1px solid rgba(255,255,255,0.06)",
+      }}
+      aria-hidden
+    />
+  );
 }
 
-function MiniModelCanvas({ url, height = 120, scale = 1.2, className = "" }) {
+/** Tiny inline 3-D mesh — clone so the same GLB can render in many WebGL contexts safely. */
+function MiniModel({ url, scale = 1.2 }) {
+  const { scene } = useGLTF(url);
+  const cloned = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  return <primitive object={cloned} scale={[scale, scale, scale]} />;
+}
+
+/**
+ * Each instance gets its own WebGL context — browsers cap ~8–16. Mount only when near the viewport
+ * so we do not exhaust contexts (which shows as solid white / broken rendering).
+ */
+function MiniModelCanvas({ url, height = 120, scale = 1.2, className = "", lazy = true }) {
+  const wrapRef = useRef(null);
+  const [active, setActive] = useState(!lazy);
+
+  useEffect(() => {
+    if (!lazy) return;
+    const el = wrapRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => setActive(e.isIntersecting),
+      { root: null, rootMargin: "120px", threshold: 0.02 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [lazy]);
+
   return (
-    <ErrorBoundary fallback={null}>
-      <View
-        style={{ height, width: "100%" }}
-        className={className}
-        camera={{ position: [0, 0, 3.5], fov: 45 }}
-      >
-        <ambientLight intensity={0.7} color="#8090ff" />
-        <directionalLight position={[2, 3, 3]} intensity={1.8} />
-        <pointLight position={[-2, 1, 1]} intensity={1.0} color="#00d4ff" />
-        <Suspense fallback={<ModelFallback scale={0.4} color="#7c3aed" />}>
-          <MiniModel url={url} scale={scale} />
-        </Suspense>
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
-          autoRotate
-          autoRotateSpeed={3}
-        />
-      </View>
+    <ErrorBoundary fallback={<MiniCanvasSlot />}>
+      <div ref={wrapRef} style={{ height, width: "100%" }} className={`relative ${className}`}>
+        {active ? (
+          <Canvas
+            className="absolute inset-0 touch-none bg-transparent"
+            camera={{ position: [0, 0, 3.5], fov: 45 }}
+            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
+            gl={{ alpha: true, antialias: true, stencil: false, depth: true }}
+            onCreated={({ gl }) => {
+              gl.setClearColor(0x000000, 0);
+            }}
+          >
+            <ambientLight intensity={0.85} color="#a8b4ff" />
+            <directionalLight position={[2, 3, 3]} intensity={2.2} />
+            <directionalLight position={[-2, -1, -2]} intensity={0.5} color="#4c1d95" />
+            <pointLight position={[-2, 1, 1]} intensity={1.2} color="#00d4ff" />
+            <Suspense fallback={<ModelFallback scale={0.4} color="#7c3aed" />}>
+              <MiniModel url={url} scale={scale} />
+            </Suspense>
+            <OrbitControls
+              enableZoom={false}
+              enablePan={false}
+              autoRotate
+              autoRotateSpeed={3}
+            />
+          </Canvas>
+        ) : (
+          <MiniCanvasSlot />
+        )}
+      </div>
     </ErrorBoundary>
   );
 }
@@ -270,21 +324,36 @@ function HeroSection() {
               <div className="absolute rounded-full" style={{ width: 520, height: 520, background: "radial-gradient(circle, rgba(0,212,255,0.04) 0%, transparent 70%)" }} />
             </div>
 
-            <View 
-              camera={{ position: [0, 0, 6.5], fov: 55 }} 
-              className="w-full h-full relative z-10"
+            <Canvas
+              className="absolute inset-0 z-10 h-full w-full bg-transparent"
+              shadows
+              camera={{ position: [0, 0, 6.5], fov: 55 }}
+              dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
+              gl={{ alpha: true, antialias: true, stencil: false, depth: true }}
+              onCreated={({ gl }) => {
+                gl.setClearColor(0x000000, 0);
+              }}
             >
               <ambientLight intensity={0.6} color="#8090ff" />
               <directionalLight position={[3, 5, 4]} intensity={1.8} />
               <pointLight position={[-4, 2, 1]} intensity={1.5} color="#00d4ff" />
               <pointLight position={[4, -2, -1]} intensity={1.0} color="#7c3aed" />
-              <Suspense fallback={<ModelFallback scale={1.2} color="#00d4ff" />}>
-                <Avatar scale={[2, 2, 2]} position={[0, -1.2, 0]} rotation={[0, -0.5, 0]} />
-              </Suspense>
+              <ErrorBoundary
+                fallback={<ModelFallback scale={1.2} color="#00d4ff" />}
+                onError={(err) => {
+                  if (import.meta.env.DEV) {
+                    console.warn("[3D] Avatar failed to load (/models/Avatar.glb):", err?.message ?? err);
+                  }
+                }}
+              >
+                <Suspense fallback={<ModelFallback scale={1.2} color="#00d4ff" />}>
+                  <Avatar scale={[2, 2, 2]} position={[0, -1.2, 0]} rotation={[0, -0.5, 0]} />
+                </Suspense>
+              </ErrorBoundary>
               {ORBIT_MODELS.map((m, i) => (
                 <FloatingIconSlot key={i} {...m} />
               ))}
-            </View>
+            </Canvas>
           </div>
         </div>
 
@@ -867,7 +936,7 @@ function ContactSection() {
 
           <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-0">
             {/* Left model */}
-            <div className="hidden lg:flex items-end justify-center overflow-hidden"
+            <div className="hidden lg:flex items-center justify-center overflow-hidden min-h-0"
               style={{ background: "rgba(0,212,255,0.03)", borderRight: "1px solid var(--border-cyan)" }}>
               <MiniModelCanvas url={M.emailIcon} height={220} scale={1.2} />
             </div>
@@ -905,7 +974,7 @@ function ContactSection() {
             </div>
 
             {/* Right model */}
-            <div className="hidden lg:flex items-end justify-center overflow-hidden"
+            <div className="hidden lg:flex items-center justify-center overflow-hidden min-h-0"
               style={{ background: "rgba(124,58,237,0.03)", borderLeft: "1px solid var(--border-violet)" }}>
               <MiniModelCanvas url={M.teamWorkflow} height={220} scale={1.2} />
             </div>

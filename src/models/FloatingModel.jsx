@@ -1,9 +1,11 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import { SkeletonUtils } from "three-stdlib";
 
 export function FloatingModel({ url, radius, speed, angleOffset, modelScale, yAmplitude, ...props }) {
   const { scene } = useGLTF(url);
+  const cloned = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const ref = useRef();
 
   useFrame(({ clock }) => {
@@ -15,7 +17,7 @@ export function FloatingModel({ url, radius, speed, angleOffset, modelScale, yAm
 
   return (
     <group ref={ref} {...props}>
-      <primitive object={scene} scale={[modelScale, modelScale, modelScale]} />
+      <primitive object={cloned} scale={[modelScale, modelScale, modelScale]} />
     </group>
   );
 }

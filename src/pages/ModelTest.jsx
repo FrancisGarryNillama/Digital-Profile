@@ -1,5 +1,6 @@
 import React, { Suspense, useState } from 'react';
-import { OrbitControls, useGLTF, Stage, Html, View } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF, Stage, Html } from '@react-three/drei';
 
 // A helper to handle the loading state
 function Model({ url }) {
@@ -58,18 +59,27 @@ const ModelTest = () => {
         </div>
       </div>
 
-      <View className="w-full h-full" camera={{ position: [0, 0, 15], fov: 50 }}>
-        <Suspense fallback={<Html center>Loading Model...</Html>}>
-          <ambientLight intensity={0.7} />
-          <directionalLight position={[10, 10, 5]} intensity={2} />
-          
-          <Stage environment="city" intensity={0.5}>
-            <Model key={selectedModel.url} url={selectedModel.url} />
-          </Stage>
+      <div className="absolute inset-0 top-28">
+        <Canvas
+          className="h-full w-full"
+          camera={{ position: [0, 0, 15], fov: 50 }}
+          gl={{ alpha: true, antialias: true }}
+          onCreated={({ gl }) => {
+            gl.setClearColor(0xf1f5f9, 1);
+          }}
+        >
+          <Suspense fallback={<Html center>Loading Model...</Html>}>
+            <ambientLight intensity={0.7} />
+            <directionalLight position={[10, 10, 5]} intensity={2} />
 
-          <OrbitControls makeDefault />
-        </Suspense>
-      </View>
+            <Stage environment="city" intensity={0.5}>
+              <Model key={selectedModel.url} url={selectedModel.url} />
+            </Stage>
+
+            <OrbitControls makeDefault />
+          </Suspense>
+        </Canvas>
+      </div>
     </section>
   );
 };

@@ -1,14 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { Canvas } from "@react-three/fiber";
-import { View } from "@react-three/drei";
 import { Navbar } from "./components";
 import { Home, Projects, Contact, ModelTest } from "./pages";
 import { hero } from "./constants";
 
 const App = () => {
-  const containerRef = useRef();
-
   useEffect(() => {
     // Update the browser tab title
     document.title = `${hero.name} | Portfolio`;
@@ -46,7 +42,7 @@ const App = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    <div className="relative w-full">
       <div className="relative z-10">
         <Router
           future={{
@@ -67,19 +63,6 @@ const App = () => {
           </Routes>
         </Router>
       </div>
-
-      {/* Single Global Canvas for the entire application */}
-      <Canvas
-        eventSource={containerRef}
-        className="pointer-events-none fixed inset-0 z-[5]"
-        shadows
-        gl={{ alpha: true, antialias: true }}
-        onCreated={({ gl }) => {
-          gl.setClearColor(0x000000, 0);
-        }}
-      >
-        <View.Port />
-      </Canvas>
     </div>
   );
 };

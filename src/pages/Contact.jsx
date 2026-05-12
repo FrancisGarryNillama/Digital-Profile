@@ -1,6 +1,6 @@
 import emailjs from "@emailjs/browser";
 import { Suspense, useRef, useState } from "react";
-import { View } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
 
 import { Fox } from "../models";
 import useAlert from "../hooks/useAlert";
@@ -147,11 +147,12 @@ const Contact = () => {
 
         <div className='lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px] relative'>
           <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent z-10 pointer-events-none" />
-          <View
-            className="w-full h-full"
-            camera={{
-              position: [0, 0, 5],
-              fov: 75,
+          <Canvas
+            className="absolute inset-0 h-full w-full"
+            camera={{ position: [0, 0, 5], fov: 75 }}
+            gl={{ alpha: true, antialias: true }}
+            onCreated={({ gl }) => {
+              gl.setClearColor(0x000000, 0);
             }}
           >
             <directionalLight position={[0, 0, 1]} intensity={2.5} />
@@ -172,7 +173,7 @@ const Contact = () => {
                 scale={[0.5, 0.5, 0.5]}
               />
             </Suspense>
-          </View>
+          </Canvas>
         </div>
       </section>
       <Footer />
