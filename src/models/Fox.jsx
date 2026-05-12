@@ -66,4 +66,4 @@ export function Fox({ currentAnimation, ...props }) {
   );
 }
 
-useGLTF.preload("/src/assets/3d models/fox.glb");
+useGLTF("/models/fox.glb");

@@ -7,6 +7,7 @@ export function FloatingModel({ url, radius, speed, angleOffset, modelScale, yAm
   const ref = useRef();
 
   useFrame(({ clock }) => {
+    if (!ref.current) return;
     const angle = clock.elapsedTime * speed + angleOffset;
     ref.current.position.set(Math.cos(angle) * radius, Math.sin(angle * 2) * yAmplitude, Math.sin(angle) * radius);
     ref.current.rotation.y += 0.01; // Simple rotation for visual interest

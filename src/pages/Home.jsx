@@ -8,7 +8,7 @@ import "react-vertical-timeline-component/style.min.css";
 import { Link } from "react-router-dom";
 
 import { Avatar, FloatingModel } from "../models";
-import { Footer } from "../components";
+import { Footer, ErrorBoundary } from "../components";
 import {
   hero,
   skills,
@@ -23,34 +23,28 @@ import {
 // MODEL PATH MAP — all GLBs from /src/assets/3d/
 // ─────────────────────────────────────────────────────────────
 const M = {
-  // AI & Machine Learning
-  futuristicAIBrain:       "/src/assets/3d models/Futuristic_AI_Brain.glb",
-  neuralNetworkNodes:      "/src/assets/3d models/Neural_Network_Nodes.glb",
-  intelligentCircuitry:    "/src/assets/3d models/Intelligent_Circuitry.glb",
-  abstractAIProcessor:     "/src/assets/3d models/Abstract_AI_Processor_Core.glb",
-  aiCore:                  "/src/assets/3d models/AI_Core.glb",
-  aiBrain:                 "/src/assets/3d models/Ai_brain.glb",
-  // Full-Stack Development
-  codeBrackets:            "/src/assets/3d models/Code_Brackets.glb",
-  serverStack:             "/src/assets/3d models/Server_Stack.glb",
-  databaseCylinder:        "/src/assets/3d models/Database_Cylinder.glb",
-  apiNodes:                "/src/assets/3d models/Api_Nodes.glb",
-  frontendComponentLayers: "/src/assets/3d models/Frontend_Component_Layers.glb",
-  // Automation & Engineering
-  workflowPipeline:        "/src/assets/3d models/Workflow_Pipeline.glb",
-  systemOrchestration:     "/src/assets/3d models/System_Orchestration.glb",
-  browserAutomation:       "/src/assets/3d models/Browser_Automation.glb",
-  cloudSync:               "/src/assets/3d models/Cloud_Synchronization.glb",
-  // Data & Analytics
-  interactiveAnalytics:    "/src/assets/3d models/Interactive_Analytics_Dashboard.glb",
-  dataVizGraphs:           "/src/assets/3d models/Data_Visualization_Graphs.glb",
-  secureDoc:               "/src/assets/3d models/Secure_Document_Exchange.glb",
-  // Communication & Collaboration
-  emailIcon:               "/src/assets/3d models/Professional_Emailmessage_Icon.glb",
-  teamWorkflow:            "/src/assets/3d models/Team_workflow_symbol.glb",
-  // Innovation & Creativity
-  abstractInnovation:      "/src/assets/3d models/Abstract_geometric_innovation_symbol.glb",
-  futuristicLightbulb:     "/src/assets/3d models/Futuristic_Lightbulb.glb",
+  futuristicAIBrain:       "/models/Futuristic_AI_Brain.glb",
+  neuralNetworkNodes:      "/models/Neural_Network_Nodes.glb",
+  intelligentCircuitry:    "/models/Intelligent_Circuitry.glb",
+  abstractAIProcessor:     "/models/Abstract_AI_Processor_Core.glb",
+  aiCore:                  "/models/AI_Core.glb",
+  aiBrain:                 "/models/Ai_brain.glb",
+  codeBrackets:            "/models/Code_Brackets.glb",
+  serverStack:             "/models/Server_Stack.glb",
+  databaseCylinder:        "/models/Database_Cylinder.glb",
+  apiNodes:                "/models/Api_Nodes.glb",
+  frontendComponentLayers: "/models/Frontend_Component_Layers.glb",
+  workflowPipeline:        "/models/Workflow_Pipeline.glb",
+  systemOrchestration:     "/models/System_Orchestration.glb",
+  browserAutomation:       "/models/Browser_Automation.glb",
+  cloudSync:               "/models/Cloud_Synchronization.glb",
+  interactiveAnalytics:    "/models/Interactive_Analytics_Dashboard.glb",
+  dataVizGraphs:           "/models/Data_Visualization_Graphs.glb",
+  secureDoc:               "/models/Secure_Document_Exchange.glb",
+  emailIcon:               "/models/Professional_Emailmessage_Icon.glb",
+  teamWorkflow:            "/models/Team_workflow_symbol.glb",
+  abstractInnovation:      "/models/Abstract_geometric_innovation_symbol.glb",
+  futuristicLightbulb:     "/models/Futuristic_Lightbulb.glb",
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -86,9 +80,11 @@ useGLTF.preload("/src/assets/3d models/avatar.glb");
 // ─────────────────────────────────────────────────────────────
 function FloatingIconSlot(props) {
   return (
-    <Suspense fallback={null}>
-      <FloatingModel {...props} />
-    </Suspense>
+    <ErrorBoundary fallback={null}>
+      <Suspense fallback={null}>
+        <FloatingModel {...props} />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
@@ -100,24 +96,26 @@ function MiniModel({ url, scale = 1.2, autoRotate = true }) {
 
 function MiniModelCanvas({ url, height = 120, scale = 1.2, className = "" }) {
   return (
-    <View 
-      style={{ height, width: "100%" }} 
-      className={className}
-      camera={{ position: [0, 0, 3.5], fov: 45 }}
-    >
-      <ambientLight intensity={0.7} color="#8090ff" />
-      <directionalLight position={[2, 3, 3]} intensity={1.8} />
-      <pointLight position={[-2, 1, 1]} intensity={1.0} color="#00d4ff" />
-      <Suspense fallback={null}>
-        <MiniModel url={url} scale={scale} />
-      </Suspense>
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate
-        autoRotateSpeed={3}
-      />
-    </View>
+    <ErrorBoundary fallback={null}>
+      <View
+        style={{ height, width: "100%" }}
+        className={className}
+        camera={{ position: [0, 0, 3.5], fov: 45 }}
+      >
+        <ambientLight intensity={0.7} color="#8090ff" />
+        <directionalLight position={[2, 3, 3]} intensity={1.8} />
+        <pointLight position={[-2, 1, 1]} intensity={1.0} color="#00d4ff" />
+        <Suspense fallback={null}>
+          <MiniModel url={url} scale={scale} />
+        </Suspense>
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          autoRotate
+          autoRotateSpeed={3}
+        />
+      </View>
+    </ErrorBoundary>
   );
 }
 
