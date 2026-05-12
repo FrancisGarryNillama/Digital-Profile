@@ -73,7 +73,7 @@ export const projects = [
     ],
     metrics: ["Processing: 2–5s / doc", "8+ document types", "95%+ accuracy"], // TODO: Update with real metrics
     stack: ["Python", "LangChain", "FastAPI", "MongoDB", "Gemini AI"],
-    modelUrl: "/src/assets/3d/Neural_Network.glb",
+    modelUrl: "/src/assets/3d models/Neural_Network.glb",
     theme: "cyan",
     github: "https://github.com/FrancisGarryNillama",
     live: "https://ai-agent-demo.vercel.app",
@@ -94,7 +94,7 @@ export const projects = [
     ],
     metrics: ["8+ platforms", "99% uptime SLA", "HTTP-first fallback"], // TODO: Update with real metrics
     stack: ["Python", "Selenium", "Playwright", "FastAPI", "PostgreSQL"],
-    modelUrl: "/src/assets/3d/Data_Flow_Pipeline.glb",
+    modelUrl: "/src/assets/3d models/Data_Flow_Pipeline.glb",
     theme: "violet",
     github: "https://github.com/francis-dev",
     live: "https://automation-pipeline.vercel.app",
@@ -115,7 +115,7 @@ export const projects = [
     ],
     metrics: ["OCR pipeline: 2–5s", "Legal doc support", "95%+ field accuracy"], // TODO: Update with real metrics
     stack: ["Python", "Tesseract", "OpenCV", "GPT-4", "React"],
-    modelUrl: "/src/assets/3d/Glowing_Document.glb",
+    modelUrl: "/src/assets/3d models/Glowing_Document.glb",
     theme: "amber",
     github: "https://github.com/francis-dev",
     live: null,
@@ -136,7 +136,7 @@ export const projects = [
     ],
     metrics: ["Analytics: 150–300ms", "Multi-model support", "Automated benchmarks"], // TODO: Update with real metrics
     stack: ["Python", "OpenCV", "Pandas", "FastAPI", "React"],
-    modelUrl: "/src/assets/3d/Dashboard.glb",
+    modelUrl: "/src/assets/3d models/Dashboard.glb",
     theme: "cyan",
     github: "https://github.com/francis-dev",
     live: null,
@@ -149,7 +149,7 @@ export const projects = [
     name: "SCS Platform",
     description: "Student collaboration system with real-time data, role-based access control, and integrated file sharing.", // TODO: Update with real description
     stack: ["React", "Node.js", "MongoDB"],
-    modelUrl: "/src/assets/3d/Layered_Glass_Squares.glb",
+    modelUrl: "/src/assets/3d models/Layered_Glass_Squares.glb",
     theme: "violet",
     github: "https://github.com/francis-dev",
     live: null,
@@ -160,7 +160,7 @@ export const projects = [
     name: "Sleeping Pod Booking",
     description: "Full-stack booking platform with real-time availability management and payment flow integration.", // TODO: Update with real description
     stack: ["React", "Express", "MySQL"],
-    modelUrl: "/src/assets/3d/Database.glb",
+    modelUrl: "/src/assets/3d models/Database.glb",
     theme: "cyan",
     github: "https://github.com/francis-dev",
     live: null,
@@ -171,7 +171,7 @@ export const projects = [
     name: "Data Visualization Dashboard",
     description: "Interactive analytics dashboard with live data feeds, customisable charts, and advanced filtering.", // TODO: Update with real description
     stack: ["React", "D3.js", "Python", "FastAPI"],
-    modelUrl: "/src/assets/3d/Data_Vis.glb",
+    modelUrl: "/src/assets/3d models/Data_Vis.glb",
     theme: "amber",
     github: "https://github.com/francis-dev",
     live: null,
@@ -182,7 +182,7 @@ export const projects = [
     name: "Horror Puzzle System",
     description: "Game logic engine with procedural puzzle generation, narrative branching, and WebSocket multiplayer.", // TODO: Update with real description
     stack: ["Python", "React", "WebSockets"],
-    modelUrl: "/src/assets/3d/HexaCore_Crystal.glb",
+    modelUrl: "/src/assets/3d models/HexaCore_Crystal.glb",
     theme: "violet",
     github: "https://github.com/francis-dev",
     live: null,

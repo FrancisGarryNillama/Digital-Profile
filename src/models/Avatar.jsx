@@ -4,7 +4,7 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 export const Avatar = ({ ...props }) => {
   const group = useRef();
   // Load the main avatar model
-  const { scene, animations } = useGLTF("/src/assets/3d/avatar.glb");
+  const { scene, animations } = useGLTF("/src/assets/3d models/avatar.glb");
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {

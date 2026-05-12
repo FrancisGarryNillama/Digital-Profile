@@ -1,10 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Canvas } from "@react-three/fiber";
+import { View } from "@react-three/drei";
 import { Navbar } from "./components";
 import { Home, Projects, Contact, ModelTest } from "./pages";
 import { hero } from "./constants";
 
 const App = () => {
+  const containerRef = useRef();
+
   useEffect(() => {
     // Update the browser tab title
     document.title = `${hero.name} | Portfolio`;
@@ -42,15 +46,35 @@ const App = () => {
   }, []);
 
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/"          element={<Home />} />
-        <Route path="/projects"  element={<Projects />} />
-        <Route path="/contact"   element={<Contact />} />
-        <Route path="/modeltest" element={<ModelTest />} />
-      </Routes>
-    </Router>
+    <div ref={containerRef} className="relative w-full">
+      <Router
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+          v7_fetcherPersist: true,
+          v7_normalizeFormMethod: true,
+          v7_partialHydration: true,
+          v7_skipActionErrorRevalidation: true,
+        }}
+      >
+        <Navbar />
+        <Routes>
+          <Route path="/"          element={<Home />} />
+          <Route path="/projects"  element={<Projects />} />
+          <Route path="/contact"   element={<Contact />} />
+          <Route path="/modeltest" element={<ModelTest />} />
+        </Routes>
+      </Router>
+
+      {/* Single Global Canvas for the entire application */}
+      <Canvas
+        eventSource={containerRef}
+        className="pointer-events-none fixed inset-0 z-[100]"
+        shadows
+      >
+        <View.Port />
+      </Canvas>
+    </div>
   );
 };
 

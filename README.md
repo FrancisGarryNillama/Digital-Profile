@@ -59,4 +59,4 @@ This project is a high-performance personal portfolio designed to demonstrate te
 
 - `/src/models/`: React components for GLB/GLTF 3D models.
 - `/src/pages/`: Main application views including the 3D-heavy Home page.
-- `/src/assets/3d/`: Binary 3D assets (.glb files).raeection observers.
+- `/src/assets/3d models/`: Binary 3D assets (.glb files).

@@ -1,6 +1,5 @@
-import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { useGLTF, OrbitControls, Environment } from "@react-three/drei";
+import { useGLTF, OrbitControls, Environment, Stage, View } from "@react-three/drei";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -21,22 +20,70 @@ import {
 } from "../constants";
 
 // ─────────────────────────────────────────────────────────────
-// 3D HERO CONFIG  — 6 models orbiting the avatar
+// MODEL PATH MAP — all GLBs from /src/assets/3d/
 // ─────────────────────────────────────────────────────────────
-const ORBIT_MODELS = [ // Updated paths to /src/assets/3d/
-  { url: "/src/assets/3d/Neural_Network.glb",     radius: 2.5, speed: 0.30, angleOffset: 0,                     modelScale: 0.32, yAmplitude: 0.45 },
-  { url: "/src/assets/3d/Circuit_Microchip.glb",  radius: 3.1, speed: 0.22, angleOffset: Math.PI / 3,            modelScale: 0.28, yAmplitude: 0.35 },
-  { url: "/src/assets/3d/Server_Stack.glb",       radius: 2.3, speed: 0.38, angleOffset: (Math.PI * 2) / 3,     modelScale: 0.26, yAmplitude: 0.55 },
-  { url: "/src/assets/3d/Database.glb",           radius: 3.3, speed: 0.18, angleOffset: Math.PI,                modelScale: 0.30, yAmplitude: 0.40 },
-  { url: "/src/assets/3d/Data_Flow_Pipeline.glb", radius: 2.7, speed: 0.28, angleOffset: (Math.PI * 4) / 3,     modelScale: 0.24, yAmplitude: 0.30 },
-  { url: "/src/assets/3d/Energy_Core.glb",        radius: 2.1, speed: 0.42, angleOffset: (Math.PI * 5) / 3,     modelScale: 0.34, yAmplitude: 0.50 },
+const M = {
+  // AI & Machine Learning
+  futuristicAIBrain:       "/src/assets/3d models/Futuristic_AI_Brain.glb",
+  neuralNetworkNodes:      "/src/assets/3d models/Neural_Network_Nodes.glb",
+  intelligentCircuitry:    "/src/assets/3d models/Intelligent_Circuitry.glb",
+  abstractAIProcessor:     "/src/assets/3d models/Abstract_AI_Processor_Core.glb",
+  aiCore:                  "/src/assets/3d models/AI_Core.glb",
+  aiBrain:                 "/src/assets/3d models/Ai_brain.glb",
+  // Full-Stack Development
+  codeBrackets:            "/src/assets/3d models/Code_Brackets.glb",
+  serverStack:             "/src/assets/3d models/Server_Stack.glb",
+  databaseCylinder:        "/src/assets/3d models/Database_Cylinder.glb",
+  apiNodes:                "/src/assets/3d models/Api_Nodes.glb",
+  frontendComponentLayers: "/src/assets/3d models/Frontend_Component_Layers.glb",
+  // Automation & Engineering
+  workflowPipeline:        "/src/assets/3d models/Workflow_Pipeline.glb",
+  systemOrchestration:     "/src/assets/3d models/System_Orchestration.glb",
+  browserAutomation:       "/src/assets/3d models/Browser_Automation.glb",
+  cloudSync:               "/src/assets/3d models/Cloud_Synchronization.glb",
+  // Data & Analytics
+  interactiveAnalytics:    "/src/assets/3d models/Interactive_Analytics_Dashboard.glb",
+  dataVizGraphs:           "/src/assets/3d models/Data_Visualization_Graphs.glb",
+  secureDoc:               "/src/assets/3d models/Secure_Document_Exchange.glb",
+  // Communication & Collaboration
+  emailIcon:               "/src/assets/3d models/Professional_Emailmessage_Icon.glb",
+  teamWorkflow:            "/src/assets/3d models/Team_workflow_symbol.glb",
+  // Innovation & Creativity
+  abstractInnovation:      "/src/assets/3d models/Abstract_geometric_innovation_symbol.glb",
+  futuristicLightbulb:     "/src/assets/3d models/Futuristic_Lightbulb.glb",
+};
+
+// ─────────────────────────────────────────────────────────────
+// HERO ORBIT — 8 models, AI-first ordering
+// ─────────────────────────────────────────────────────────────
+const ORBIT_MODELS = [
+  { url: M.futuristicAIBrain,       radius: 2.8, speed: 0.28, angleOffset: 0,                   modelScale: 0.30, yAmplitude: 0.40 },
+  { url: M.neuralNetworkNodes,      radius: 2.3, speed: 0.38, angleOffset: Math.PI / 4,          modelScale: 0.27, yAmplitude: 0.50 },
+  { url: M.intelligentCircuitry,    radius: 3.2, speed: 0.20, angleOffset: Math.PI / 2,          modelScale: 0.26, yAmplitude: 0.35 },
+  { url: M.abstractAIProcessor,     radius: 2.5, speed: 0.32, angleOffset: (Math.PI * 3) / 4,   modelScale: 0.29, yAmplitude: 0.45 },
+  { url: M.workflowPipeline,        radius: 3.0, speed: 0.24, angleOffset: Math.PI,              modelScale: 0.25, yAmplitude: 0.38 },
+  { url: M.databaseCylinder,        radius: 2.2, speed: 0.42, angleOffset: (Math.PI * 5) / 4,   modelScale: 0.28, yAmplitude: 0.55 },
+  { url: M.serverStack,             radius: 3.4, speed: 0.18, angleOffset: (Math.PI * 3) / 2,   modelScale: 0.24, yAmplitude: 0.32 },
+  { url: M.cloudSync,               radius: 2.6, speed: 0.35, angleOffset: (Math.PI * 7) / 4,   modelScale: 0.26, yAmplitude: 0.42 },
 ];
 
-// Preload to reduce jank
+// Preload hero models
 ORBIT_MODELS.forEach((m) => useGLTF.preload(m.url));
-useGLTF.preload("/src/assets/3d/avatar.glb");
+useGLTF.preload("/src/assets/3d models/avatar.glb");
 
-// Suspense-isolated slot so one bad GLB doesn't kill the scene
+// Preload section models (lazy but early)
+[
+  M.codeBrackets, M.apiNodes, M.frontendComponentLayers,
+  M.browserAutomation, M.systemOrchestration,
+  M.interactiveAnalytics, M.dataVizGraphs, M.secureDoc,
+  M.emailIcon, M.teamWorkflow,
+  M.abstractInnovation, M.futuristicLightbulb,
+  M.aiCore, M.aiBrain,
+].forEach((url) => useGLTF.preload(url));
+
+// ─────────────────────────────────────────────────────────────
+// SUB-COMPONENTS
+// ─────────────────────────────────────────────────────────────
 function FloatingIconSlot(props) {
   return (
     <Suspense fallback={null}>
@@ -45,112 +92,145 @@ function FloatingIconSlot(props) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────
-const THEME = {
-  cyan:   { border: "var(--border-cyan)",          badgeClass: "badge",        glow: "rgba(0,212,255,0.12)"  },
-  violet: { border: "var(--border-violet)",        badgeClass: "badge-violet", glow: "rgba(124,58,237,0.12)" },
-  amber:  { border: "rgba(240,165,0,0.2)",         badgeClass: "badge-amber",  glow: "rgba(240,165,0,0.10)"  },
-};
+/** Tiny inline 3-D canvas for section decoration */
+function MiniModel({ url, scale = 1.2, autoRotate = true }) {
+  const { scene } = useGLTF(url);
+  return <primitive object={scene} scale={[scale, scale, scale]} />;
+}
 
-const ACCENT_COLOR = {
-  cyan:   "#00d4ff",
-  violet: "#a78bfa",
-  amber:  "#fbbf24",
-};
+function MiniModelCanvas({ url, height = 120, scale = 1.2, className = "" }) {
+  return (
+    <View 
+      style={{ height, width: "100%" }} 
+      className={className}
+      camera={{ position: [0, 0, 3.5], fov: 45 }}
+    >
+      <ambientLight intensity={0.7} color="#8090ff" />
+      <directionalLight position={[2, 3, 3]} intensity={1.8} />
+      <pointLight position={[-2, 1, 1]} intensity={1.0} color="#00d4ff" />
+      <Suspense fallback={null}>
+        <MiniModel url={url} scale={scale} />
+      </Suspense>
+      <OrbitControls
+        enableZoom={false}
+        enablePan={false}
+        autoRotate
+        autoRotateSpeed={3}
+      />
+    </View>
+  );
+}
 
 // Scroll-reveal hook
-function useFadeIn(threshold = 0.15) {
+function useFadeIn(threshold = 0.1) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
-
   useEffect(() => {
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold }
     );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [threshold]);
-
   return [ref, visible];
 }
+
+const THEME = {
+  cyan:   { border: "var(--border-cyan)",   badge: "badge",        glow: "rgba(0,212,255,0.12)" },
+  violet: { border: "var(--border-violet)", badge: "badge-violet", glow: "rgba(124,58,237,0.12)" },
+  amber:  { border: "rgba(240,165,0,0.2)",  badge: "badge-amber",  glow: "rgba(240,165,0,0.10)" },
+};
+const ACCENT = { cyan: "#00d4ff", violet: "#a78bfa", amber: "#fbbf24" };
+
+// Models mapped to skill categories (shown as section eye-candy)
+const CATEGORY_MODELS = {
+  "AI / ML":    { url: M.abstractAIProcessor, scale: 1.1 },
+  "Frontend":   { url: M.frontendComponentLayers, scale: 1.0 },
+  "Backend":    { url: M.apiNodes, scale: 1.1 },
+  "Database":   { url: M.databaseCylinder, scale: 1.1 },
+  "Automation": { url: M.workflowPipeline, scale: 1.0 },
+  "DevOps":     { url: M.cloudSync, scale: 1.0 },
+};
+
+// Models mapped to AI capabilities
+const AI_CAP_MODELS = [
+  M.aiCore,
+  M.secureDoc,
+  M.browserAutomation,
+  M.systemOrchestration,
+  M.interactiveAnalytics,
+  M.dataVizGraphs,
+];
 
 // ═══════════════════════════════════════════════════════════════
 // SECTION 1 — HERO
 // ═══════════════════════════════════════════════════════════════
 function HeroSection() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setMounted(true), 100); return () => clearTimeout(t); }, []);
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 100);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="relative w-full min-h-screen flex items-center overflow-hidden"
     >
-      {/* Decorative grid lines */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div
-          className="absolute bottom-0 left-0 right-0 h-px"
-          style={{ background: "linear-gradient(90deg, transparent, var(--cyan), transparent)", opacity: 0.3 }}
-        />
-      </div>
+      {/* Bottom divider */}
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px z-0"
+        style={{ background: "linear-gradient(90deg, transparent, var(--cyan), transparent)", opacity: 0.3 }} />
 
-      <div className="section-container !pt-32 !pb-0 w-full z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-0 lg:gap-8 min-h-[calc(100vh-80px)]">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 pt-24 pb-8 z-10">
+        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-4 w-full min-h-[calc(100vh-80px)]">
 
-          {/* ── Left: Text Content ── */}
-          <div className="flex-1 flex flex-col justify-center order-2 lg:order-1 pb-12 lg:pb-0">
-            {/* Label */}
+          {/* ── TEXT ── */}
+          <div className="flex-1 flex flex-col justify-center order-2 lg:order-1 pb-10 lg:pb-0 w-full">
             <div
-              className="section-label mb-6"
-              style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(20px)", transition: "all 0.7s ease" }}
+              className="section-label mb-4 sm:mb-6"
+              style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(20px)", transition: "all .7s ease" }}
             >
               {hero.tagline}
             </div>
 
-            {/* Headline */}
             <h1
-              className="hero-title mb-6"
-              style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(30px)", transition: "all 0.7s ease 0.1s" }}
+              className="hero-title mb-4 sm:mb-6"
+              style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(30px)", transition: "all .7s ease .1s" }}
             >
               {hero.headline[0]}
               <br />
               <span className="gradient-text">{hero.headline[1]}</span>
             </h1>
 
-            {/* Description */}
             <p
-              className="section-subtitle mb-8"
-              style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(20px)", transition: "all 0.7s ease 0.2s" }}
+              className="section-subtitle mb-6 sm:mb-8 max-w-xl"
+              style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(20px)", transition: "all .7s ease .2s" }}
             >
               {hero.description}
             </p>
 
-            {/* Specialization pills */}
             <div
-              className="flex flex-wrap gap-2 mb-10"
-              style={{ opacity: mounted ? 1 : 0, transition: "all 0.7s ease 0.3s" }}
+              className="flex flex-wrap gap-2 mb-8 sm:mb-10"
+              style={{ opacity: mounted ? 1 : 0, transition: "all .7s ease .3s" }}
             >
               {hero.specializations.map((s) => (
-                <span key={s} className="skill-tag">{s}</span>
+                <span key={s} className="skill-tag text-xs sm:text-sm">{s}</span>
               ))}
             </div>
 
-            {/* CTAs */}
             <div
-              className="flex flex-wrap gap-4"
-              style={{ opacity: mounted ? 1 : 0, transition: "all 0.7s ease 0.4s" }}
+              className="flex flex-wrap gap-3 sm:gap-4"
+              style={{ opacity: mounted ? 1 : 0, transition: "all .7s ease .4s" }}
             >
               <button
-                className="btn-primary"
+                className="btn-primary text-xs sm:text-sm px-6 sm:px-8 py-3"
                 onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
               >
                 <span>View Projects</span>
               </button>
               <button
-                className="btn-outline"
+                className="btn-outline text-xs sm:text-sm px-6 sm:px-8 py-3"
                 onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
               >
                 Let's Collaborate
@@ -158,88 +238,56 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* ── Right: 3D Canvas ── */}
+          {/* ── 3-D CANVAS ── */}
           <div
-            className="flex-1 order-1 lg:order-2 w-full"
+            className="order-1 lg:order-2 w-full lg:flex-1 relative"
             style={{
-              height: "clamp(400px, 55vh, 650px)",
+              height: "clamp(320px, 48vw, 680px)",
               opacity: mounted ? 1 : 0,
-              transition: "opacity 1s ease 0.5s",
-              position: "relative",
+              transition: "opacity 1s ease .5s",
             }}
           >
-            {/* Glow rings behind canvas */}
-            <div
-              className="absolute inset-0 flex items-center justify-center pointer-events-none"
-              style={{ zIndex: 0 }}
-            >
-              <div
-                style={{
-                  width: 380, height: 380,
-                  borderRadius: "50%",
-                  border: "1px dashed rgba(0,212,255,0.15)",
-                  animation: "spin 40s linear infinite",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  width: 260, height: 260,
-                  borderRadius: "50%",
-                  border: "1px dashed rgba(124,58,237,0.12)",
-                  animation: "spin 25s linear infinite reverse",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  width: 500, height: 500,
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(0,212,255,0.04) 0%, transparent 70%)",
-                }}
-              />
+            {/* Rings */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+              {[500, 380, 260].map((size, i) => (
+                <div
+                  key={size}
+                  className="absolute rounded-full"
+                  style={{
+                    width: size, height: size,
+                    border: `1px dashed ${i % 2 === 0 ? "rgba(0,212,255,0.13)" : "rgba(124,58,237,0.10)"}`,
+                    animation: `spin ${25 + i * 8}s linear ${i % 2 === 0 ? "" : "reverse"} infinite`,
+                  }}
+                />
+              ))}
+              <div className="absolute rounded-full" style={{ width: 520, height: 520, background: "radial-gradient(circle, rgba(0,212,255,0.04) 0%, transparent 70%)" }} />
             </div>
 
-            <Canvas
-              camera={{ position: [0, 0, 6.5], fov: 55 }}
-              style={{ position: "relative", zIndex: 1 }}
+            <View 
+              camera={{ position: [0, 0, 6.5], fov: 55 }} 
+              className="w-full h-full relative z-10"
             >
-              {/* Lighting */}
               <ambientLight intensity={0.6} color="#8090ff" />
-              <directionalLight position={[3, 5, 4]} intensity={1.8} color="#ffffff" />
-              <pointLight position={[-4, 2, 1]}   intensity={1.5} color="#00d4ff" />
-              <pointLight position={[4,  -2, -1]} intensity={1.0} color="#7c3aed" />
-              <pointLight position={[0,  -3, 3]}  intensity={0.6} color="#ffffff" />
-
-              {/* Avatar */}
+              <directionalLight position={[3, 5, 4]} intensity={1.8} />
+              <pointLight position={[-4, 2, 1]} intensity={1.5} color="#00d4ff" />
+              <pointLight position={[4, -2, -1]} intensity={1.0} color="#7c3aed" />
               <Suspense fallback={null}>
-                <Avatar 
-                  scale={[2, 2, 2]} 
-                  position={[0, -1.2, 0]} 
-                  rotation={[0, -0.5, 0]} 
-                />
+                <Avatar scale={[2, 2, 2]} position={[0, -1.2, 0]} rotation={[0, -0.5, 0]} />
               </Suspense>
-
-              {/* Orbiting icons */}
               {ORBIT_MODELS.map((m, i) => (
                 <FloatingIconSlot key={i} {...m} />
               ))}
-            </Canvas>
+            </View>
           </div>
         </div>
 
         {/* Scroll indicator */}
         <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2"
           style={{ opacity: mounted ? 0.5 : 0, transition: "opacity 1s ease 1.5s" }}
         >
-          <span className="text-xs font-oxanium tracking-widest" style={{ color: "var(--text-muted)" }}>
-            SCROLL
-          </span>
-          <div
-            className="w-px h-12"
-            style={{ background: "linear-gradient(to bottom, var(--cyan), transparent)", animation: "fadeIn 2s ease infinite" }}
-          />
+          <span className="text-xs font-oxanium tracking-widest" style={{ color: "var(--text-muted)" }}>SCROLL</span>
+          <div className="w-px h-12" style={{ background: "linear-gradient(to bottom, var(--cyan), transparent)" }} />
         </div>
       </div>
     </section>
@@ -250,21 +298,22 @@ function HeroSection() {
 // SECTION 2 — ABOUT
 // ═══════════════════════════════════════════════════════════════
 function AboutSection() {
-  const [ref, visible] = useFadeIn(0.1);
+  const [ref, visible] = useFadeIn(0.08);
 
   const highlights = [
-    { value: "4+",  label: "AI Projects Built"         },
-    { value: "8+",  label: "Platforms Automated"        },
-    { value: "95%", label: "OCR Extraction Accuracy"    },
+    { value: "4+",  label: "AI Projects Built"        },
+    { value: "8+",  label: "Platforms Automated"       },
+    { value: "95%", label: "OCR Extraction Accuracy"   },
     { value: "2–5s", label: "Document Processing Time" },
   ];
 
   return (
-    <section id="about" ref={ref} className="relative">
-      <div className="section-container">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: text */}
-          <div style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)", transition: "all 0.8s ease" }}>
+    <section id="about" ref={ref} className="relative w-full">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+          {/* Left */}
+          <div style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)", transition: "all .8s ease" }}>
             <p className="section-label">Who I Am</p>
             <h2 className="section-title">
               Engineering at the<br />
@@ -272,54 +321,45 @@ function AboutSection() {
               and Full-Stack
             </h2>
             <p className="section-subtitle mb-6">
-              I'm an AI Systems Developer and Full-Stack Engineer with hands-on experience building
-              OCR pipelines, LLM-powered agents, and enterprise automation workflows.
+              AI Systems Developer & Full-Stack Engineer with hands-on experience building OCR pipelines, LLM-powered agents, and enterprise automation workflows.
             </p>
             <p className="section-subtitle mb-8" style={{ color: "var(--text-muted)" }}>
-              My background spans a Lifewood AI Systems internship — where I shipped real production
-              AI tooling — and BPO communication experience that sharpened my systematic approach
-              to complex problem-solving.
+              My background spans a Lifewood AI Systems internship — shipping real production AI tooling — and BPO communication experience that sharpened systematic problem-solving.
             </p>
-
-            {/* Specialization pills */}
             <div className="flex flex-wrap gap-2">
-              {["AI Systems", "OCR Automation", "LLM Integration", "Enterprise Workflows", "Full-Stack Architecture", "Browser Orchestration"].map((s) => (
-                <span key={s} className="skill-tag">{s}</span>
+              {["AI Systems","OCR Automation","LLM Integration","Enterprise Workflows","Full-Stack Architecture","Browser Orchestration"].map((s) => (
+                <span key={s} className="skill-tag text-xs">{s}</span>
               ))}
             </div>
           </div>
 
-          {/* Right: stats */}
+          {/* Right */}
           <div
-            className="grid grid-cols-2 gap-4"
-            style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)", transition: "all 0.8s ease 0.15s" }}
+            className="grid grid-cols-2 gap-3 sm:gap-4"
+            style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)", transition: "all .8s ease .15s" }}
           >
             {highlights.map((h) => (
-              <div key={h.label} className="glass-card p-6 text-center hover:border-brand-cyan transition-all duration-300">
-                <div
-                  className="font-oxanium font-bold mb-2 gradient-text"
-                  style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)" }}
-                >
+              <div key={h.label} className="glass-card p-4 sm:p-6 text-center hover:border-brand-cyan transition-all duration-300">
+                <div className="font-oxanium font-bold mb-1 gradient-text" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.6rem)" }}>
                   {h.value}
                 </div>
-                <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                  {h.label}
-                </div>
+                <div className="text-xs sm:text-sm" style={{ color: "var(--text-secondary)" }}>{h.label}</div>
               </div>
             ))}
 
-            {/* Philosophy card */}
-            <div
-              className="glass-card-violet p-6 col-span-2"
-              style={{ borderLeft: "3px solid var(--violet)" }}
-            >
-              <p className="font-oxanium text-sm mb-2" style={{ color: "#a78bfa" }}>
-                Engineering Philosophy
-              </p>
-              <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", lineHeight: 1.7 }}>
-                "Don't just automate tasks — build systems that think. Every pipeline I design
-                is architected to be observable, recoverable, and intelligent at every layer."
-              </p>
+            {/* 3-D model eye-candy */}
+            <div className="glass-card col-span-2 overflow-hidden" style={{ borderLeft: "3px solid var(--cyan)" }}>
+              <div className="flex flex-col sm:flex-row items-center gap-0">
+                <div className="w-full sm:w-40 shrink-0">
+                  <MiniModelCanvas url={M.aiBrain} height={130} scale={1.0} />
+                </div>
+                <div className="p-5">
+                  <p className="font-oxanium text-sm mb-2" style={{ color: "var(--cyan)" }}>Engineering Philosophy</p>
+                  <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.7 }}>
+                    "Don't just automate tasks — build systems that think. Every pipeline I design is architected to be observable, recoverable, and intelligent at every layer."
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -329,54 +369,51 @@ function AboutSection() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SECTION 3 — TECH STACK
+// SECTION 3 — TECH STACK (with per-category 3D models)
 // ═══════════════════════════════════════════════════════════════
 function TechStackSection() {
-  const [ref, visible] = useFadeIn(0.1);
+  const [ref, visible] = useFadeIn(0.08);
   const categories = Object.entries(skills);
 
   return (
-    <section id="stack" ref={ref} className="relative">
-      {/* Divider */}
-      <div className="h-px mx-auto max-w-5xl" style={{ background: "linear-gradient(90deg, transparent, var(--border-cyan), transparent)" }} />
+    <section id="stack" ref={ref} className="relative w-full">
+      <div className="h-px w-full max-w-5xl mx-auto" style={{ background: "linear-gradient(90deg, transparent, var(--border-cyan), transparent)" }} />
 
-      <div className="section-container">
-        <div className="text-center mb-14" style={{ opacity: visible ? 1 : 0, transition: "all 0.8s ease" }}>
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
+        <div className="text-center mb-12 sm:mb-16" style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}>
           <p className="section-label justify-center">Technical Depth</p>
-          <h2 className="section-title">
-            Full-Spectrum <span className="gradient-text">Tech Stack</span>
-          </h2>
+          <h2 className="section-title">Full-Spectrum <span className="gradient-text">Tech Stack</span></h2>
           <p className="section-subtitle mx-auto text-center">
             From AI model orchestration to production deployments — a complete engineering toolkit.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {categories.map(([cat, techList], ci) => {
             const accent = categoryAccent[cat] || "cyan";
-            const color  = ACCENT_COLOR[accent];
+            const color  = ACCENT[accent];
+            const catModel = CATEGORY_MODELS[cat];
             return (
               <div
                 key={cat}
-                className="tech-card"
+                className="tech-card flex flex-col"
                 style={{
                   opacity:   visible ? 1 : 0,
                   transform: visible ? "none" : "translateY(24px)",
-                  transition: `all 0.7s ease ${ci * 0.08}s`,
+                  transition: `all .7s ease ${ci * 0.08}s`,
                 }}
               >
+                {/* Mini model viewer */}
+                {catModel && (
+                  <div className="rounded-xl overflow-hidden mb-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <MiniModelCanvas url={catModel.url} height={110} scale={catModel.scale} />
+                  </div>
+                )}
+
                 {/* Category header */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: color, boxShadow: `0 0 10px ${color}` }}
-                  />
-                  <span
-                    className="font-oxanium font-semibold text-sm tracking-wide"
-                    style={{ color }}
-                  >
-                    {cat}
-                  </span>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-2 h-2 rounded-full" style={{ background: color, boxShadow: `0 0 10px ${color}` }} />
+                  <span className="font-oxanium font-semibold text-sm tracking-wide" style={{ color }}>{cat}</span>
                 </div>
 
                 {/* Tech pills */}
@@ -384,7 +421,7 @@ function TechStackSection() {
                   {techList.map((tech) => (
                     <span
                       key={tech}
-                      className={`skill-tag${accent === "violet" ? " skill-tag-violet" : accent === "amber" ? " skill-tag-amber" : ""}`}
+                      className={`skill-tag text-xs${accent === "violet" ? " skill-tag-violet" : accent === "amber" ? " skill-tag-amber" : ""}`}
                     >
                       {tech}
                     </span>
@@ -403,37 +440,33 @@ function TechStackSection() {
 // SECTION 4 — PROJECTS
 // ═══════════════════════════════════════════════════════════════
 function ProjectsSection() {
-  const [ref, visible] = useFadeIn(0.08);
+  const [ref, visible] = useFadeIn(0.06);
   const tier1 = projects.filter((p) => p.tier === 1);
   const tier2 = projects.filter((p) => p.tier === 2);
 
   return (
-    <section id="projects" ref={ref} className="relative">
-      <div className="h-px mx-auto max-w-5xl" style={{ background: "linear-gradient(90deg, transparent, var(--border-cyan), transparent)" }} />
+    <section id="projects" ref={ref} className="relative w-full">
+      <div className="h-px w-full max-w-5xl mx-auto" style={{ background: "linear-gradient(90deg, transparent, var(--border-cyan), transparent)" }} />
 
-      <div className="section-container">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14"
-          style={{ opacity: visible ? 1 : 0, transition: "all 0.8s ease" }}
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
+        <div
+          className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 sm:mb-16"
+          style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}
         >
           <div>
             <p className="section-label">Engineering Showcase</p>
-            <h2 className="section-title">
-              Featured <span className="gradient-text">Projects</span>
-            </h2>
+            <h2 className="section-title">Featured <span className="gradient-text">Projects</span></h2>
           </div>
-          <Link
-            to="/projects"
-            className="btn-outline text-sm self-start sm:self-auto whitespace-nowrap"
-          >
+          <Link to="/projects" className="btn-outline text-xs sm:text-sm self-start sm:self-auto whitespace-nowrap px-5 py-2.5">
             All Projects →
           </Link>
         </div>
 
-        {/* Tier 1 — Hero cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Tier 1 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 mb-5 sm:mb-6">
           {tier1.map((p, i) => {
             const theme = THEME[p.theme] || THEME.cyan;
-            const color = ACCENT_COLOR[p.theme];
+            const color = ACCENT[p.theme];
             return (
               <div
                 key={p.id}
@@ -442,91 +475,51 @@ function ProjectsSection() {
                   border: `1px solid ${theme.border}`,
                   opacity:   visible ? 1 : 0,
                   transform: visible ? "none" : "translateY(30px)",
-                  transition: `all 0.8s ease ${i * 0.1}s`,
+                  transition: `all .8s ease ${i * 0.1}s`,
                 }}
               >
-                {/* Header bar */}
-                <div
-                  className="h-1.5 w-full"
-                  style={{ background: `linear-gradient(90deg, ${color}, transparent)` }}
-                />
-
-                <div className="p-7">
-                  {/* Project name */}
+                <div className="h-1.5 w-full" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
+                <div className="p-5 sm:p-7">
                   <div className="flex items-start justify-between gap-4 mb-4">
                     <div>
-                      <span className={`${theme.badgeClass} text-xs mb-2 inline-block`}>
-                        Tier 1 · Featured
-                      </span>
-                      <h3 className="font-oxanium font-bold text-xl" style={{ color: "var(--text-primary)" }}>
-                        {p.name}
-                      </h3>
+                      <span className={`${theme.badge} text-xs mb-2 inline-block`}>Tier 1 · Featured</span>
+                      <h3 className="font-oxanium font-bold text-lg sm:text-xl" style={{ color: "var(--text-primary)" }}>{p.name}</h3>
                       <p className="text-xs mt-1" style={{ color }}>{p.tagline}</p>
                     </div>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-sm mb-5" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>
-                    {p.description}
-                  </p>
+                  <p className="text-sm mb-5" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>{p.description}</p>
 
-                  {/* Metrics */}
                   {p.metrics && (
                     <div className="flex flex-wrap gap-2 mb-5">
                       {p.metrics.map((m) => (
-                        <span
-                          key={m}
-                          className="text-xs px-3 py-1 rounded-full font-oxanium"
+                        <span key={m} className="text-xs px-3 py-1 rounded-full font-oxanium"
                           style={{
                             background: `rgba(${p.theme === "violet" ? "124,58,237" : p.theme === "amber" ? "240,165,0" : "0,212,255"},0.08)`,
                             border: `1px solid ${theme.border}`,
                             color,
-                          }}
-                        >
+                          }}>
                           {m}
                         </span>
                       ))}
                     </div>
                   )}
 
-                  {/* Engineering challenge (first one) */}
                   {p.challenges?.[0] && (
-                    <div
-                      className="p-3 rounded-lg mb-5 text-xs"
-                      style={{ background: "rgba(255,255,255,0.03)", borderLeft: `2px solid ${color}`, color: "var(--text-secondary)" }}
-                    >
+                    <div className="p-3 rounded-lg mb-5 text-xs"
+                      style={{ background: "rgba(255,255,255,0.03)", borderLeft: `2px solid ${color}`, color: "var(--text-secondary)" }}>
                       <span className="font-oxanium font-semibold" style={{ color }}>Challenge: </span>
                       {p.challenges[0]}
                     </div>
                   )}
 
-                  {/* Stack */}
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {p.stack.map((s) => (
-                      <span key={s} className={theme.badgeClass}>{s}</span>
-                    ))}
+                    {p.stack.map((s) => <span key={s} className={theme.badge}>{s}</span>)}
                   </div>
 
-                  {/* Links */}
-                  <div className="flex gap-3">
-                    <a
-                      href={p.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-outline text-xs px-4 py-2"
-                    >
-                      GitHub →
-                    </a>
-                    {p.live && (
-                      <a
-                        href={p.live}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-primary text-xs px-4 py-2"
-                      >
-                        <span>Live Demo</span>
-                      </a>
-                    )}
+                  <div className="flex flex-wrap gap-3">
+                    <a href={p.github} target="_blank" rel="noopener noreferrer" className="btn-outline text-xs px-4 py-2">GitHub →</a>
+                    {p.live && <a href={p.live} target="_blank" rel="noopener noreferrer" className="btn-primary text-xs px-4 py-2"><span>Live Demo</span></a>}
                   </div>
                 </div>
               </div>
@@ -534,11 +527,11 @@ function ProjectsSection() {
           })}
         </div>
 
-        {/* Tier 2 — Compact cards */}
+        {/* Tier 2 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {tier2.map((p, i) => {
             const theme = THEME[p.theme] || THEME.cyan;
-            const color = ACCENT_COLOR[p.theme];
+            const color = ACCENT[p.theme];
             return (
               <div
                 key={p.id}
@@ -547,26 +540,17 @@ function ProjectsSection() {
                   border: `1px solid ${theme.border}`,
                   opacity:   visible ? 1 : 0,
                   transform: visible ? "none" : "translateY(20px)",
-                  transition: `all 0.7s ease ${0.4 + i * 0.07}s`,
+                  transition: `all .7s ease ${0.4 + i * 0.07}s`,
                 }}
               >
                 <div className="h-0.5 w-8 rounded-full mb-4" style={{ background: color }} />
                 <h4 className="font-oxanium font-semibold text-sm mb-2">{p.name}</h4>
-                <p className="text-xs mb-4" style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}>
-                  {p.description}
-                </p>
+                <p className="text-xs mb-4" style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}>{p.description}</p>
                 <div className="flex flex-wrap gap-1 mb-4">
-                  {p.stack.map((s) => (
-                    <span key={s} className={`${theme.badgeClass} text-xs`}>{s}</span>
-                  ))}
+                  {p.stack.map((s) => <span key={s} className={`${theme.badge} text-xs`}>{s}</span>)}
                 </div>
-                <a
-                  href={p.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-oxanium font-semibold hover:opacity-80 transition-opacity"
-                  style={{ color }}
-                >
+                <a href={p.github} target="_blank" rel="noopener noreferrer"
+                  className="text-xs font-oxanium font-semibold hover:opacity-80 transition-opacity" style={{ color }}>
                   GitHub →
                 </a>
               </div>
@@ -579,84 +563,85 @@ function ProjectsSection() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SECTION 5 — AI & AUTOMATION
+// SECTION 5 — AI & AUTOMATION (each card has a 3D model)
 // ═══════════════════════════════════════════════════════════════
 function AISection() {
-  const [ref, visible] = useFadeIn(0.08);
+  const [ref, visible] = useFadeIn(0.06);
+
+  const pipelineNodes = [
+    { label: "Raw Docs / Web",   color: "#475569" },
+    { label: "OCR / Scraper",    color: "#00d4ff" },
+    { label: "LLM Extraction",   color: "#7c3aed" },
+    { label: "FastAPI Pipeline", color: "#00d4ff" },
+    { label: "DB / Dashboard",   color: "#f0a500" },
+  ];
 
   return (
-    <section id="ai" ref={ref} className="relative">
-      <div className="h-px mx-auto max-w-5xl" style={{ background: "linear-gradient(90deg, transparent, var(--border-violet), transparent)" }} />
+    <section id="ai" ref={ref} className="relative w-full">
+      <div className="h-px w-full max-w-5xl mx-auto" style={{ background: "linear-gradient(90deg, transparent, var(--border-violet), transparent)" }} />
 
-      <div className="section-container">
-        <div
-          className="text-center mb-14"
-          style={{ opacity: visible ? 1 : 0, transition: "all 0.8s ease" }}
-        >
-          <p className="section-label justify-center" style={{ color: "#a78bfa" }}>
-            What Sets Me Apart
-          </p>
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
+        <div className="text-center mb-12 sm:mb-14" style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}>
+          <p className="section-label justify-center" style={{ color: "#a78bfa" }}>What Sets Me Apart</p>
           <h2 className="section-title">
-            AI & Automation <span style={{ background: "linear-gradient(135deg, #7c3aed, #00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Capabilities</span>
+            AI & Automation{" "}
+            <span style={{ background: "linear-gradient(135deg, #7c3aed, #00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Capabilities
+            </span>
           </h2>
           <p className="section-subtitle mx-auto text-center">
             Most developers build apps. I build intelligent systems that automate, reason, and scale.
           </p>
         </div>
 
-        {/* Architecture diagram hint */}
+        {/* Architecture pipeline — scrolls horizontally on small screens */}
         <div
-          className="glass-card-violet rounded-xl p-6 mb-10 flex items-center gap-4 overflow-x-auto"
-          style={{ opacity: visible ? 1 : 0, transition: "all 0.8s ease 0.1s" }}
+          className="glass-card-violet rounded-xl p-4 sm:p-6 mb-10 overflow-x-auto"
+          style={{ opacity: visible ? 1 : 0, transition: "all .8s ease .1s" }}
         >
-          {[
-            { label: "Raw Docs / Web",   color: "#475569" },
-            { label: "OCR / Scraper",    color: "#00d4ff" },
-            { label: "LLM Extraction",   color: "#7c3aed" },
-            { label: "FastAPI Pipeline", color: "#00d4ff" },
-            { label: "DB / Dashboard",   color: "#f0a500" },
-          ].map((node, i, arr) => (
-            <div key={node.label} className="flex items-center gap-3 shrink-0">
-              <div
-                className="px-3 py-2 rounded-lg text-xs font-oxanium font-semibold whitespace-nowrap"
-                style={{
-                  background: `rgba(${node.color === "#00d4ff" ? "0,212,255" : node.color === "#7c3aed" ? "124,58,237" : node.color === "#f0a500" ? "240,165,0" : "71,85,105"},0.12)`,
-                  border: `1px solid ${node.color}30`,
-                  color: node.color,
-                }}
-              >
-                {node.label}
+          <div className="flex items-center gap-2 sm:gap-3 min-w-max">
+            {pipelineNodes.map((node, i, arr) => (
+              <div key={node.label} className="flex items-center gap-2 sm:gap-3 shrink-0">
+                <div
+                  className="px-2 sm:px-3 py-2 rounded-lg text-xs font-oxanium font-semibold whitespace-nowrap"
+                  style={{
+                    background: `rgba(${node.color === "#00d4ff" ? "0,212,255" : node.color === "#7c3aed" ? "124,58,237" : node.color === "#f0a500" ? "240,165,0" : "71,85,105"},0.12)`,
+                    border: `1px solid ${node.color}30`,
+                    color: node.color,
+                  }}
+                >
+                  {node.label}
+                </div>
+                {i < arr.length - 1 && <span className="text-slate-600 text-base sm:text-lg">→</span>}
               </div>
-              {i < arr.length - 1 && (
-                <span className="text-slate-600 text-lg">→</span>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Capability cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Capability cards — each has a 3D model */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {aiCapabilities.map((cap, i) => (
             <div
               key={cap.title}
-              className="ai-card"
+              className="ai-card flex flex-col"
               style={{
                 opacity:   visible ? 1 : 0,
                 transform: visible ? "none" : "translateY(24px)",
-                transition: `all 0.7s ease ${0.15 + i * 0.08}s`,
+                transition: `all .7s ease ${0.15 + i * 0.08}s`,
               }}
             >
-              <div className="text-3xl mb-4">{cap.icon}</div>
-              <h3 className="font-oxanium font-semibold text-base mb-3" style={{ color: "var(--text-primary)" }}>
+              {/* 3D model per capability */}
+              <div className="rounded-xl overflow-hidden mb-4" style={{ background: "rgba(124,58,237,0.05)", border: "1px solid rgba(124,58,237,0.12)" }}>
+                <MiniModelCanvas url={AI_CAP_MODELS[i] || M.aiCore} height={130} scale={1.1} />
+              </div>
+
+              <div className="text-2xl sm:text-3xl mb-3">{cap.icon}</div>
+              <h3 className="font-oxanium font-semibold text-sm sm:text-base mb-3" style={{ color: "var(--text-primary)" }}>
                 {cap.title}
               </h3>
-              <p className="text-sm mb-5" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>
-                {cap.description}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {cap.tags.map((t) => (
-                  <span key={t} className="skill-tag skill-tag-violet text-xs">{t}</span>
-                ))}
+              <p className="text-xs sm:text-sm mb-5" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>{cap.description}</p>
+              <div className="flex flex-wrap gap-2 mt-auto">
+                {cap.tags.map((t) => <span key={t} className="skill-tag skill-tag-violet text-xs">{t}</span>)}
               </div>
             </div>
           ))}
@@ -667,29 +652,24 @@ function AISection() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SECTION 6 — EXPERIENCE TIMELINE
+// SECTION 6 — EXPERIENCE
 // ═══════════════════════════════════════════════════════════════
 function ExperienceSection() {
-  const [ref, visible] = useFadeIn(0.08);
+  const [ref, visible] = useFadeIn(0.06);
 
   return (
-    <section id="experience" ref={ref} className="relative">
-      <div className="h-px mx-auto max-w-5xl" style={{ background: "linear-gradient(90deg, transparent, var(--border-cyan), transparent)" }} />
+    <section id="experience" ref={ref} className="relative w-full">
+      <div className="h-px w-full max-w-5xl mx-auto" style={{ background: "linear-gradient(90deg, transparent, var(--border-cyan), transparent)" }} />
 
-      <div className="section-container">
-        <div
-          className="text-center mb-14"
-          style={{ opacity: visible ? 1 : 0, transition: "all 0.8s ease" }}
-        >
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
+        <div className="text-center mb-12 sm:mb-14" style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}>
           <p className="section-label justify-center">Career Journey</p>
-          <h2 className="section-title">
-            Work <span className="gradient-text">Experience</span>
-          </h2>
+          <h2 className="section-title">Work <span className="gradient-text">Experience</span></h2>
         </div>
 
-        <div style={{ opacity: visible ? 1 : 0, transition: "all 0.8s ease 0.1s" }}>
+        <div style={{ opacity: visible ? 1 : 0, transition: "all .8s ease .1s" }}>
           <VerticalTimeline lineColor="rgba(0,212,255,0.15)">
-            {experiences.map((exp, i) => (
+            {experiences.map((exp) => (
               <VerticalTimelineElement
                 key={exp.company}
                 date={exp.date}
@@ -697,33 +677,21 @@ function ExperienceSection() {
                   background: exp.iconBg,
                   border: `1px solid ${exp.iconColor}40`,
                   boxShadow: `0 0 20px ${exp.iconColor}30`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: "1.4rem",
                 }}
                 icon={<span>{exp.iconEmoji}</span>}
               >
                 <div>
-                  <h3
-                    className="font-oxanium font-semibold text-base"
-                    style={{ color: "var(--text-primary)" }}
-                  >
+                  <h3 className="font-oxanium font-semibold text-sm sm:text-base" style={{ color: "var(--text-primary)" }}>
                     {exp.title}
                   </h3>
-                  <p
-                    className="text-sm mb-4 mt-1"
-                    style={{ color: exp.iconColor, fontFamily: "'Oxanium', monospace" }}
-                  >
+                  <p className="text-xs sm:text-sm mb-4 mt-1" style={{ color: exp.iconColor, fontFamily: "'Oxanium', monospace" }}>
                     {exp.company}
                   </p>
                   <ul className="space-y-2">
                     {exp.points.map((point, pi) => (
-                      <li
-                        key={pi}
-                        className="text-sm flex items-start gap-2"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
+                      <li key={pi} className="text-xs sm:text-sm flex items-start gap-2" style={{ color: "var(--text-secondary)" }}>
                         <span style={{ color: exp.iconColor, marginTop: 2, flexShrink: 0 }}>▸</span>
                         {point}
                       </li>
@@ -740,50 +708,109 @@ function ExperienceSection() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SECTION 7 — RESUME & LINKS
+// SECTION 7 — INNOVATION SHOWCASE (new 3D model display)
+// ═══════════════════════════════════════════════════════════════
+function InnovationSection() {
+  const [ref, visible] = useFadeIn(0.1);
+
+  const innovationItems = [
+    {
+      url: M.abstractInnovation,
+      label: "Abstract Innovation",
+      desc: "Conceptual problem-solving with geometric precision",
+      color: "cyan",
+    },
+    {
+      url: M.futuristicLightbulb,
+      label: "Futuristic Thinking",
+      desc: "Forward-looking design with modern AI principles",
+      color: "violet",
+    },
+    {
+      url: M.teamWorkflow,
+      label: "Collaborative Systems",
+      desc: "Building tools that amplify team productivity",
+      color: "amber",
+    },
+    {
+      url: M.emailIcon,
+      label: "Communication Layer",
+      desc: "Intelligent messaging and notification pipelines",
+      color: "cyan",
+    },
+  ];
+
+  return (
+    <section id="innovation" ref={ref} className="relative w-full">
+      <div className="h-px w-full max-w-5xl mx-auto" style={{ background: "linear-gradient(90deg, transparent, var(--border-violet), transparent)" }} />
+
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
+        <div className="text-center mb-12" style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}>
+          <p className="section-label justify-center">Design & Vision</p>
+          <h2 className="section-title">
+            Innovation <span className="gradient-text">Philosophy</span>
+          </h2>
+          <p className="section-subtitle mx-auto text-center">
+            The principles behind every system I architect — intelligent, collaborative, and human-centred.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
+          style={{ opacity: visible ? 1 : 0, transition: "all .8s ease .1s" }}>
+          {innovationItems.map((item, i) => {
+            const color = ACCENT[item.color];
+            return (
+              <div
+                key={item.label}
+                className="glass-card flex flex-col overflow-hidden"
+                style={{
+                  transition: `all .7s ease ${i * 0.09}s`,
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? "none" : "translateY(24px)",
+                }}
+              >
+                <div className="h-0.5 w-full" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
+                <div style={{ background: "rgba(255,255,255,0.02)" }}>
+                  <MiniModelCanvas url={item.url} height={140} scale={1.1} />
+                </div>
+                <div className="p-5">
+                  <p className="font-oxanium font-semibold text-sm mb-2" style={{ color }}>{item.label}</p>
+                  <p className="text-xs" style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}>{item.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 8 — RESUME & LINKS
 // ═══════════════════════════════════════════════════════════════
 function ResumeSection() {
   const [ref, visible] = useFadeIn(0.1);
 
   const links = [
-    {
-      icon: "📄",
-      title: "Download Resume",
-      subtitle: "PDF · Updated 2025",
-      href: "/resume.pdf",         // TODO: replace with your resume path
-      accent: "cyan",
-    },
-    {
-      icon: "⌨️",
-      title: "GitHub Profile",
-      subtitle: "github.com/FrancisGarryNillama",
-      href: socialLinks.find((s) => s.name === "GitHub")?.url || "#",
-      accent: "cyan",
-    },
-    {
-      icon: "💼",
-      title: "LinkedIn",
-      subtitle: "Connect professionally",
-      href: socialLinks.find((s) => s.name === "LinkedIn")?.url || "#",
-      accent: "violet",
-    },
+    { icon: "📄", title: "Download Resume", subtitle: "Updated May 2026", href: "C:\\Users\\genpr\\Documents\\Professional Documents\\Resume_Nillama_2026.pdf", accent: "cyan" },
+    { icon: "⌨️", title: "GitHub Profile",  subtitle: "github.com/FrancisGarryNillama", href: socialLinks.find((s) => s.name === "GitHub")?.url || "#", accent: "cyan" },
+    { icon: "💼", title: "LinkedIn",         subtitle: "Connect professionally", href: socialLinks.find((s) => s.name === "LinkedIn")?.url || "#", accent: "violet" },
   ];
 
   return (
-    <section id="resume" className="relative">
-      <div className="h-px mx-auto max-w-5xl" style={{ background: "linear-gradient(90deg, transparent, var(--border-cyan), transparent)" }} />
+    <section id="resume" className="relative w-full">
+      <div className="h-px w-full max-w-5xl mx-auto" style={{ background: "linear-gradient(90deg, transparent, var(--border-cyan), transparent)" }} />
 
-      <div className="section-container !py-16" ref={ref}>
-        <div className="text-center mb-10" style={{ opacity: visible ? 1 : 0, transition: "all 0.8s ease" }}>
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-16 sm:py-20" ref={ref}>
+        <div className="text-center mb-10" style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}>
           <p className="section-label justify-center">Downloads & Links</p>
-          <h2 className="section-title">
-            Resume & <span className="gradient-text">Profiles</span>
-          </h2>
+          <h2 className="section-title">Resume & <span className="gradient-text">Profiles</span></h2>
         </div>
 
         <div
           className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto"
-          style={{ opacity: visible ? 1 : 0, transition: "all 0.8s ease 0.1s" }}
+          style={{ opacity: visible ? 1 : 0, transition: "all .8s ease .1s" }}
         >
           {links.map((l) => (
             <a
@@ -794,13 +821,9 @@ function ResumeSection() {
               className="download-card flex-col text-center"
               style={{ justifyContent: "center" }}
             >
-              <span className="text-3xl mb-2">{l.icon}</span>
-              <span className="font-oxanium font-semibold text-sm" style={{ color: "var(--text-primary)" }}>
-                {l.title}
-              </span>
-              <span className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                {l.subtitle}
-              </span>
+              <span className="text-2xl sm:text-3xl mb-2">{l.icon}</span>
+              <span className="font-oxanium font-semibold text-xs sm:text-sm" style={{ color: "var(--text-primary)" }}>{l.title}</span>
+              <span className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>{l.subtitle}</span>
             </a>
           ))}
         </div>
@@ -810,78 +833,75 @@ function ResumeSection() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SECTION 8 — CONTACT CTA
+// SECTION 9 — CONTACT CTA (with 3D email/team models)
 // ═══════════════════════════════════════════════════════════════
 function ContactSection() {
   const [ref, visible] = useFadeIn(0.1);
 
   return (
-    <section id="contact" ref={ref} className="relative">
-      <div className="h-px mx-auto max-w-5xl" style={{ background: "linear-gradient(90deg, transparent, var(--border-violet), transparent)" }} />
+    <section id="contact" ref={ref} className="relative w-full">
+      <div className="h-px w-full max-w-5xl mx-auto" style={{ background: "linear-gradient(90deg, transparent, var(--border-violet), transparent)" }} />
 
-      <div className="section-container !pb-0">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 pb-0 pt-8 sm:pt-12">
         <div
-          className="glass-card-violet rounded-2xl p-12 md:p-16 text-center relative overflow-hidden"
+          className="glass-card-violet rounded-2xl relative overflow-hidden"
           style={{
             opacity:   visible ? 1 : 0,
             transform: visible ? "none" : "translateY(30px)",
-            transition: "all 0.9s ease",
+            transition: "all .9s ease",
           }}
         >
-          {/* Background glow */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "radial-gradient(ellipse at 50% 120%, rgba(124,58,237,0.15) 0%, transparent 65%)",
-            }}
-          />
-
-          {/* Scan line effect */}
+          {/* Glow backdrop */}
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: "radial-gradient(ellipse at 50% 120%, rgba(124,58,237,0.15) 0%, transparent 65%)" }} />
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="scan-line" style={{ opacity: 0.3 }} />
+            <div className="scan-line" style={{ opacity: 0.25 }} />
           </div>
 
-          <p className="section-label justify-center mb-4" style={{ color: "#a78bfa" }}>
-            Open to Opportunities
-          </p>
+          <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-0">
+            {/* Left model */}
+            <div className="hidden lg:flex items-end justify-center overflow-hidden"
+              style={{ background: "rgba(0,212,255,0.03)", borderRight: "1px solid var(--border-cyan)" }}>
+              <MiniModelCanvas url={M.emailIcon} height={220} scale={1.2} />
+            </div>
 
-          <h2 className="section-title mb-4">
-            Interested in <span className="gradient-text">AI Systems</span>,<br />
-            Automation, or Scalable Engineering?
-          </h2>
+            {/* Center text */}
+            <div className="p-8 sm:p-12 lg:p-16 text-center flex flex-col items-center justify-center">
+              <p className="section-label justify-center mb-4" style={{ color: "#a78bfa" }}>Open to Opportunities</p>
+              <h2 className="section-title mb-4">
+                Interested in <span className="gradient-text">AI Systems</span>,<br />
+                Automation, or Scalable Engineering?
+              </h2>
+              <p className="section-subtitle mx-auto text-center mb-8">
+                Let's connect and build something intelligent together.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                <a
+                  href={`mailto:${socialLinks.find((s) => s.name === "Email")?.url?.replace("mailto:", "") || "your@email.com"}`}
+                  className="btn-primary px-8 sm:px-10 py-3 sm:py-4 text-xs sm:text-sm w-full sm:w-auto"
+                >
+                  <span>Send a Message</span>
+                </a>
+                <Link to="/contact" className="btn-outline px-8 sm:px-10 py-3 sm:py-4 text-xs sm:text-sm w-full sm:w-auto">
+                  Full Contact Page
+                </Link>
+              </div>
+              <div className="flex items-center justify-center gap-5 mt-8">
+                {socialLinks.map((link) => (
+                  <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer"
+                    className="font-oxanium text-xs font-semibold transition-colors duration-200 hover:opacity-80"
+                    style={{ color: "var(--text-muted)" }}>
+                    {link.name}
+                  </a>
+                ))}
+              </div>
+            </div>
 
-          <p className="section-subtitle mx-auto text-center mb-10">
-            Let's connect and build something intelligent together —
-            whether it's a production AI pipeline, enterprise automation,
-            or a full-stack platform that needs to scale.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href={`mailto:${socialLinks.find((s) => s.name === "Email")?.url?.replace("mailto:", "") || "your@email.com"}`}
-              className="btn-primary px-10 py-4 text-sm"
-            >
-              <span>Send a Message</span>
-            </a>
-            <Link to="/contact" className="btn-outline px-10 py-4 text-sm">
-              Full Contact Page
-            </Link>
-          </div>
-
-          {/* Social row */}
-          <div className="flex items-center justify-center gap-5 mt-10">
-            {socialLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-oxanium text-xs font-semibold transition-colors duration-200 hover:opacity-80"
-                style={{ color: "var(--text-muted)" }}
-              >
-                {link.name}
-              </a>
-            ))}
+            {/* Right model */}
+            <div className="hidden lg:flex items-end justify-center overflow-hidden"
+              style={{ background: "rgba(124,58,237,0.03)", borderLeft: "1px solid var(--border-violet)" }}>
+              <MiniModelCanvas url={M.teamWorkflow} height={220} scale={1.2} />
+            </div>
           </div>
         </div>
       </div>
@@ -890,16 +910,17 @@ function ContactSection() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// MAIN HOME  — assembles all sections
+// MAIN HOME
 // ═══════════════════════════════════════════════════════════════
 const Home = () => (
-  <main>
+  <main className="w-full overflow-x-hidden">
     <HeroSection />
     <AboutSection />
     <TechStackSection />
     <ProjectsSection />
     <AISection />
     <ExperienceSection />
+    <InnovationSection />
     <ResumeSection />
     <ContactSection />
     <Footer />
