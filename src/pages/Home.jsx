@@ -81,10 +81,19 @@ useGLTF.preload("/models/Avatar.glb");
 function FloatingIconSlot(props) {
   return (
     <ErrorBoundary fallback={null}>
-      <Suspense fallback={null}>
+      <Suspense fallback={<ModelFallback scale={0.12} color="#00d4ff" />}>
         <FloatingModel {...props} />
       </Suspense>
     </ErrorBoundary>
+  );
+}
+
+function ModelFallback({ position = [0, 0, 0], scale = 0.35, color = "#ff00ff" }) {
+  return (
+    <mesh position={position} scale={scale}>
+      <icosahedronGeometry args={[1, 0]} />
+      <meshStandardMaterial wireframe color={color} />
+    </mesh>
   );
 }
 
@@ -105,7 +114,7 @@ function MiniModelCanvas({ url, height = 120, scale = 1.2, className = "" }) {
         <ambientLight intensity={0.7} color="#8090ff" />
         <directionalLight position={[2, 3, 3]} intensity={1.8} />
         <pointLight position={[-2, 1, 1]} intensity={1.0} color="#00d4ff" />
-        <Suspense fallback={null}>
+        <Suspense fallback={<ModelFallback scale={0.4} color="#7c3aed" />}>
           <MiniModel url={url} scale={scale} />
         </Suspense>
         <OrbitControls
@@ -269,7 +278,7 @@ function HeroSection() {
               <directionalLight position={[3, 5, 4]} intensity={1.8} />
               <pointLight position={[-4, 2, 1]} intensity={1.5} color="#00d4ff" />
               <pointLight position={[4, -2, -1]} intensity={1.0} color="#7c3aed" />
-              <Suspense fallback={null}>
+              <Suspense fallback={<ModelFallback scale={1.2} color="#00d4ff" />}>
                 <Avatar scale={[2, 2, 2]} position={[0, -1.2, 0]} rotation={[0, -0.5, 0]} />
               </Suspense>
               {ORBIT_MODELS.map((m, i) => (

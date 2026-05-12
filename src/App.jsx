@@ -71,7 +71,7 @@ const App = () => {
       {/* Single Global Canvas for the entire application */}
       <Canvas
         eventSource={containerRef}
-        className="pointer-events-none fixed inset-0 z-0"
+        className="pointer-events-none fixed inset-0 z-[5]"
         shadows
         gl={{ alpha: true, antialias: true }}
         onCreated={({ gl }) => {
