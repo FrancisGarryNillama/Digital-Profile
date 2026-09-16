@@ -377,10 +377,10 @@ function AboutSection() {
   const [ref, visible] = useFadeIn(0.08);
 
   const highlights = [
-    { value: "4+",  label: "AI Projects Built"        },
-    { value: "8+",  label: "Platforms Automated"       },
-    { value: "95%", label: "OCR Extraction Accuracy"   },
-    { value: "2–5s", label: "Document Processing Time" },
+    { value: "360+", label: "Commits on Lifewood systems" },
+    { value: "7",    label: "Production systems shipped"  },
+    { value: "9",    label: "Phases, one agentic platform" },
+    { value: "128",  label: "Commits on Pulse Dialer"     },
   ];
 
   return (
@@ -392,18 +392,18 @@ function AboutSection() {
           <div style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)", transition: "all .8s ease" }}>
             <p className="section-label">Who I Am</p>
             <h2 className="section-title">
-              Engineering at the<br />
-              <span className="gradient-text">Intersection of AI</span><br />
-              and Full-Stack
+              Full-Stack Engineering<br />
+              <span className="gradient-text">With Evidence</span><br />
+              Attached
             </h2>
             <p className="section-subtitle mb-6">
-              AI Systems Developer & Full-Stack Engineer with hands-on experience building OCR pipelines, LLM-powered agents, and enterprise automation workflows.
+              Full-Stack Software Engineer at Lifewood Philippines — primary engineer on the company HRIS and property-management platform, sole author of an agentic IT-ticketing system, and independently building a predictive dialer on Asterisk 22 ARI.
             </p>
             <p className="section-subtitle mb-8" style={{ color: "var(--text-muted)" }}>
-              My background spans a Lifewood AI Systems internship — shipping real production AI tooling — and BPO communication experience that sharpened systematic problem-solving.
+              Strict TypeScript, PostgreSQL row-level security, event-driven design, and commit histories that document findings as carefully as features. Before engineering: a Lifewood AI internship shipping OCR and LLM tooling, and two years in BPO that taught structured communication under pressure.
             </p>
             <div className="flex flex-wrap gap-2">
-              {["AI Systems","OCR Automation","LLM Integration","Enterprise Workflows","Full-Stack Architecture","Browser Orchestration"].map((s) => (
+              {["TypeScript / Node","Next.js / React","PostgreSQL + RLS","Supabase","Agentic AI","Asterisk ARI","Monorepos & CI"].map((s) => (
                 <span key={s} className="skill-tag text-xs">{s}</span>
               ))}
             </div>
@@ -645,11 +645,11 @@ function AISection() {
   const [ref, visible] = useFadeIn(0.06);
 
   const pipelineNodes = [
-    { label: "Raw Docs / Web",   color: "#475569" },
-    { label: "OCR / Scraper",    color: "#00d4ff" },
-    { label: "LLM Extraction",   color: "#7c3aed" },
-    { label: "FastAPI Pipeline", color: "#00d4ff" },
-    { label: "DB / Dashboard",   color: "#f0a500" },
+    { label: "Ticket / Event / Doc",  color: "#475569" },
+    { label: "Validate + Gate",       color: "#00d4ff" },
+    { label: "Agent / LLM Worker",    color: "#7c3aed" },
+    { label: "Review + Merge",        color: "#00d4ff" },
+    { label: "Postgres (RLS) + UI",   color: "#f0a500" },
   ];
 
   return (

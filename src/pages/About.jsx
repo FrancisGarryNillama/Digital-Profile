@@ -66,7 +66,7 @@ const About = () => {
             <VerticalTimeline lineColor="rgba(0, 212, 255, 0.15)">
               {experiences.map((experience) => (
                 <VerticalTimelineElement
-                  key={experience.company}
+                  key={`${experience.title}-${experience.company}`}
                   date={experience.date}
                   iconStyle={{ 
                     background: experience.iconBg,

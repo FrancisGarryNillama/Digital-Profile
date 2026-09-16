@@ -16,7 +16,7 @@ const Projects = () => {
 
         <p className='section-subtitle mt-2 mb-16'>
           A collection of systems designed to solve complex data challenges, 
-          from multi-platform browser orchestration to intelligent document parsing.
+          from telephony and HR systems to agentic remediation and document intelligence.
         </p>
 
         {/* Tier 1: Detailed Cards */}
@@ -54,15 +54,19 @@ const Projects = () => {
                   ))}
                 </div>
 
-                <div className="flex gap-4">
-                  <a 
-                    href={project.github} 
-                    target="_blank" 
-                    rel="noreferrer" 
-                    className="btn-outline text-xs px-6 py-2"
-                  >
-                    Source
-                  </a>
+                <div className="flex gap-4 items-center">
+                  {project.github ? (
+                    <a 
+                      href={project.github} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="btn-outline text-xs px-6 py-2"
+                    >
+                      Source
+                    </a>
+                  ) : (
+                    <span className="text-xs font-oxanium opacity-50 tracking-wider uppercase">Private · Company system</span>
+                  )}
                   {project.live && (
                     <a 
                       href={project.live} 
@@ -96,15 +100,19 @@ const Projects = () => {
                     <span key={s} className="text-[9px] opacity-60 font-oxanium uppercase tracking-tighter">{s}</span>
                   ))}
                 </div>
-                <a 
-                  href={project.github} 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="text-xs font-oxanium font-bold hover:underline"
-                  style={{ color: project.theme === 'violet' ? 'var(--violet)' : 'var(--cyan)' }}
-                >
-                  View Source →
-                </a>
+                {project.github ? (
+                  <a 
+                    href={project.github} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="text-xs font-oxanium font-bold hover:underline"
+                    style={{ color: project.theme === 'violet' ? 'var(--violet)' : 'var(--cyan)' }}
+                  >
+                    View Source →
+                  </a>
+                ) : (
+                  <span className="text-xs font-oxanium opacity-50">Private · Company system</span>
+                )}
               </div>
             ))}
           </div>
