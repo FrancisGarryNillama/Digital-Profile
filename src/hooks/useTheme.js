@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 const KEY = "theme";
-const META_COLOR = { dark: "#030308", light: "#f5f7fb" };
+const META_COLOR = { dark: "#030308", light: "#eef1fa" };
 
 const readStored = () => {
   try { return localStorage.getItem(KEY); } catch { return null; }

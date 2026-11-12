@@ -19,7 +19,7 @@
           var t = localStorage.getItem("theme");
           if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
           document.documentElement.dataset.theme = t;
-          if (t === "light") document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f5f7fb");
+          if (t === "light") document.querySelector('meta[name="theme-color"]').setAttribute("content", "#eef1fa");
         } catch (e) { document.documentElement.dataset.theme = "dark"; }
       })();
     </script>
