@@ -8,22 +8,17 @@
   "rewrites": [
     {
       "source": "/projects",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/contact",
-      "destination": "/index.html"
+      "destination": "/"
     }
   ],
   "redirects": [
     {
       "source": "/about",
       "destination": "/#about",
-      "permanent": true
-    },
-    {
-      "source": "/index.html",
-      "destination": "/",
       "permanent": true
     }
   ],
