@@ -1,7 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { useGLTF, OrbitControls } from "@react-three/drei";
-import { SkeletonUtils } from "three-stdlib";
+import { useEffect, useRef, useState } from "react";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -9,8 +6,8 @@ import {
 import "react-vertical-timeline-component/style.min.css";
 import { Link } from "react-router-dom";
 
-import { Avatar, FloatingModel } from "../models";
-import { Footer, ErrorBoundary } from "../components";
+import { Footer } from "../components";
+import { TechIcon, IconTile } from "../components/TechIcon";
 import {
   hero,
   skills,
@@ -22,163 +19,62 @@ import {
 } from "../constants";
 
 // ─────────────────────────────────────────────────────────────
-// MODEL PATH MAP — GLBs served from public/models/ (URL path /models/...)
+// ICON MAP — lightweight inline SVGs (replaced the ~500 MB of GLB models)
 // ─────────────────────────────────────────────────────────────
 const M = {
-  futuristicAIBrain:       "/models/Futuristic_AI_Brain.glb",
-  neuralNetworkNodes:      "/models/Neural_Network_Nodes.glb",
-  intelligentCircuitry:    "/models/Intelligent_Circuitry.glb",
-  abstractAIProcessor:     "/models/Abstract_AI_Processor_Core.glb",
-  aiCore:                  "/models/AI_Core.glb",
-  aiBrain:                 "/models/Ai_brain.glb",
-  codeBrackets:            "/models/Code_Brackets.glb",
-  serverStack:             "/models/Server_Stack.glb",
-  databaseCylinder:        "/models/Database_Cylinder.glb",
-  apiNodes:                "/models/Api_Nodes.glb",
-  frontendComponentLayers: "/models/Frontend_Component_Layers.glb",
-  workflowPipeline:        "/models/Workflow_Pipeline.glb",
-  systemOrchestration:     "/models/System_Orchestration.glb",
-  browserAutomation:       "/models/Browser_Automation.glb",
-  cloudSync:               "/models/Cloud_Synchronization.glb",
-  interactiveAnalytics:    "/models/Interactive_Analytics_Dashboard.glb",
-  dataVizGraphs:           "/models/Data_Visualization_Graphs.glb",
-  secureDoc:               "/models/Secure_Document_Exchange.glb",
-  emailIcon:               "/models/Professional_Emailmessage_Icon.glb",
-  teamWorkflow:            "/models/Team_workflow_symbol.glb",
-  abstractInnovation:      "/models/Abstract_geometric_innovation_symbol.glb",
-  futuristicLightbulb:     "/models/Futuristic_Lightbulb.glb",
+  futuristicAIBrain:       "brain",
+  neuralNetworkNodes:      "network",
+  intelligentCircuitry:    "chip",
+  abstractAIProcessor:     "processor",
+  aiCore:                  "atom",
+  aiBrain:                 "brain",
+  codeBrackets:            "code",
+  serverStack:             "server",
+  databaseCylinder:        "database",
+  apiNodes:                "api",
+  frontendComponentLayers: "layers",
+  workflowPipeline:        "pipeline",
+  systemOrchestration:     "orchestration",
+  browserAutomation:       "browser",
+  cloudSync:               "cloud",
+  interactiveAnalytics:    "dashboard",
+  dataVizGraphs:           "chart",
+  secureDoc:               "secureDoc",
+  emailIcon:               "mail",
+  teamWorkflow:            "team",
+  abstractInnovation:      "sparkle",
+  futuristicLightbulb:     "lightbulb",
 };
 
-// ─────────────────────────────────────────────────────────────
-// HERO ORBIT — 8 models, AI-first ordering
-// ─────────────────────────────────────────────────────────────
-const ORBIT_MODELS = [
-  { url: M.futuristicAIBrain,       radius: 2.8, speed: 0.28, angleOffset: 0,                   modelScale: 0.30, yAmplitude: 0.40 },
-  { url: M.neuralNetworkNodes,      radius: 2.3, speed: 0.38, angleOffset: Math.PI / 4,          modelScale: 0.27, yAmplitude: 0.50 },
-  { url: M.intelligentCircuitry,    radius: 3.2, speed: 0.20, angleOffset: Math.PI / 2,          modelScale: 0.26, yAmplitude: 0.35 },
-  { url: M.abstractAIProcessor,     radius: 2.5, speed: 0.32, angleOffset: (Math.PI * 3) / 4,   modelScale: 0.29, yAmplitude: 0.45 },
-  { url: M.workflowPipeline,        radius: 3.0, speed: 0.24, angleOffset: Math.PI,              modelScale: 0.25, yAmplitude: 0.38 },
-  { url: M.databaseCylinder,        radius: 2.2, speed: 0.42, angleOffset: (Math.PI * 5) / 4,   modelScale: 0.28, yAmplitude: 0.55 },
-  { url: M.serverStack,             radius: 3.4, speed: 0.18, angleOffset: (Math.PI * 3) / 2,   modelScale: 0.24, yAmplitude: 0.32 },
-  { url: M.cloudSync,               radius: 2.6, speed: 0.35, angleOffset: (Math.PI * 7) / 4,   modelScale: 0.26, yAmplitude: 0.42 },
+// Hero orbit — 8 icons, AI-first ordering
+const ORBIT_ICONS = [
+  M.futuristicAIBrain, M.neuralNetworkNodes, M.intelligentCircuitry, M.abstractAIProcessor,
+  M.workflowPipeline,  M.databaseCylinder,   M.serverStack,          M.cloudSync,
 ];
 
-// Preload hero models
-ORBIT_MODELS.forEach((m) => useGLTF.preload(m.url));
-useGLTF.preload("/models/Avatar.glb");
-
-// Preload section models (lazy but early)
-[
-  M.codeBrackets, M.apiNodes, M.frontendComponentLayers,
-  M.browserAutomation, M.systemOrchestration,
-  M.interactiveAnalytics, M.dataVizGraphs, M.secureDoc,
-  M.emailIcon, M.teamWorkflow,
-  M.abstractInnovation, M.futuristicLightbulb,
-  M.aiCore, M.aiBrain,
-].forEach((url) => useGLTF.preload(url));
-
-// ─────────────────────────────────────────────────────────────
-// SUB-COMPONENTS
-// ─────────────────────────────────────────────────────────────
-function FloatingIconSlot(props) {
+/** Hero visual: monogram core with icons orbiting on two rings (pure CSS animation). */
+function HeroOrbit() {
   return (
-    <ErrorBoundary
-      fallback={<ModelFallback scale={0.12} color="#00d4ff" />}
-      onError={(err) => {
-        if (import.meta.env.DEV) {
-          console.warn("[3D] Orbit model failed to load:", props.url, err?.message ?? err);
-        }
-      }}
-    >
-      <Suspense fallback={<ModelFallback scale={0.12} color="#00d4ff" />}>
-        <FloatingModel {...props} />
-      </Suspense>
-    </ErrorBoundary>
-  );
-}
-
-function ModelFallback({ position = [0, 0, 0], scale = 0.35, color = "#ff00ff" }) {
-  return (
-    <mesh position={position} scale={scale}>
-      <icosahedronGeometry args={[1, 0]} />
-      <meshStandardMaterial wireframe color={color} />
-    </mesh>
-  );
-}
-
-/** Placeholder while mini canvas is off-screen (avoids white “broken” GL areas). */
-function MiniCanvasSlot() {
-  return (
-    <div
-      className="absolute inset-0"
-      style={{
-        background: "linear-gradient(145deg, rgba(3,3,12,0.92) 0%, rgba(15,15,35,0.75) 100%)",
-        border: "1px solid rgba(255,255,255,0.06)",
-      }}
-      aria-hidden
-    />
-  );
-}
-
-/** Tiny inline 3-D mesh — clone so the same GLB can render in many WebGL contexts safely. */
-function MiniModel({ url, scale = 1.2 }) {
-  const { scene } = useGLTF(url);
-  const cloned = useMemo(() => SkeletonUtils.clone(scene), [scene]);
-  return <primitive object={cloned} scale={[scale, scale, scale]} />;
-}
-
-/**
- * Each instance gets its own WebGL context — browsers cap ~8–16. Mount only when near the viewport
- * so we do not exhaust contexts (which shows as solid white / broken rendering).
- */
-function MiniModelCanvas({ url, height = 120, scale = 1.2, className = "", lazy = true }) {
-  const wrapRef = useRef(null);
-  const [active, setActive] = useState(!lazy);
-
-  useEffect(() => {
-    if (!lazy) return;
-    const el = wrapRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => setActive(e.isIntersecting),
-      { root: null, rootMargin: "120px", threshold: 0.02 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [lazy]);
-
-  return (
-    <ErrorBoundary fallback={<MiniCanvasSlot />}>
-      <div ref={wrapRef} style={{ height, width: "100%" }} className={`relative ${className}`}>
-        {active ? (
-          <Canvas
-            className="absolute inset-0 touch-none bg-transparent"
-            camera={{ position: [0, 0, 3.5], fov: 45 }}
-            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-            gl={{ alpha: true, antialias: true, stencil: false, depth: true }}
-            onCreated={({ gl }) => {
-              gl.setClearColor(0x000000, 0);
-            }}
-          >
-            <ambientLight intensity={0.85} color="#a8b4ff" />
-            <directionalLight position={[2, 3, 3]} intensity={2.2} />
-            <directionalLight position={[-2, -1, -2]} intensity={0.5} color="#4c1d95" />
-            <pointLight position={[-2, 1, 1]} intensity={1.2} color="#00d4ff" />
-            <Suspense fallback={<ModelFallback scale={0.4} color="#7c3aed" />}>
-              <MiniModel url={url} scale={scale} />
-            </Suspense>
-            <OrbitControls
-              enableZoom={false}
-              enablePan={false}
-              autoRotate
-              autoRotateSpeed={3}
-            />
-          </Canvas>
-        ) : (
-          <MiniCanvasSlot />
-        )}
+    <div className="hero-orbit" aria-hidden>
+      <div className="hero-core">
+        <span className="font-oxanium font-bold gradient-text hero-core-text">{hero.initials}</span>
+        <TechIcon name="code" size={28} className="opacity-80" />
       </div>
-    </ErrorBoundary>
+      {[0, 1].map((ring) => (
+        <div key={ring} className={`hero-ring hero-ring-${ring}`}>
+          {ORBIT_ICONS.filter((_, i) => i % 2 === ring).map((name, i) => {
+            const angle = i * 90 + ring * 45;
+            return (
+              <div key={name + i} className="hero-orbit-slot" style={{ "--a": `${angle}deg` }}>
+                <div className="hero-orbit-pos"><div className="hero-orbit-chip">
+                  <TechIcon name={name} size={30} /></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -206,12 +102,12 @@ const ACCENT = { cyan: "#00d4ff", violet: "#a78bfa", amber: "#fbbf24" };
 
 // Models mapped to skill categories (shown as section eye-candy)
 const CATEGORY_MODELS = {
-  "AI / ML":    { url: M.abstractAIProcessor, scale: 1.1 },
-  "Frontend":   { url: M.frontendComponentLayers, scale: 1.0 },
-  "Backend":    { url: M.apiNodes, scale: 1.1 },
-  "Database":   { url: M.databaseCylinder, scale: 1.1 },
-  "Automation": { url: M.workflowPipeline, scale: 1.0 },
-  "DevOps":     { url: M.cloudSync, scale: 1.0 },
+  "AI / ML":    { url: M.abstractAIProcessor },
+  "Frontend":   { url: M.frontendComponentLayers },
+  "Backend":    { url: M.apiNodes },
+  "Database":   { url: M.databaseCylinder },
+  "Automation": { url: M.workflowPipeline },
+  "DevOps":     { url: M.cloudSync },
 };
 
 // Models mapped to AI capabilities
@@ -299,7 +195,7 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* ── 3-D CANVAS ── */}
+          {/* ── HERO VISUAL (SVG orbit) ── */}
           <div
             className="order-1 lg:order-2 w-full lg:flex-1 relative"
             style={{
@@ -308,52 +204,9 @@ function HeroSection() {
               transition: "opacity 1s ease .5s",
             }}
           >
-            {/* Rings */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-              {[500, 380, 260].map((size, i) => (
-                <div
-                  key={size}
-                  className="absolute rounded-full"
-                  style={{
-                    width: size, height: size,
-                    border: `1px dashed ${i % 2 === 0 ? "rgba(0,212,255,0.13)" : "rgba(124,58,237,0.10)"}`,
-                    animation: `spin ${25 + i * 8}s linear ${i % 2 === 0 ? "" : "reverse"} infinite`,
-                  }}
-                />
-              ))}
-              <div className="absolute rounded-full" style={{ width: 520, height: 520, background: "radial-gradient(circle, rgba(0,212,255,0.04) 0%, transparent 70%)" }} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <HeroOrbit />
             </div>
-
-            <Canvas
-              className="absolute inset-0 z-10 h-full w-full bg-transparent"
-              shadows
-              camera={{ position: [0, 0, 6.5], fov: 55 }}
-              dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-              gl={{ alpha: true, antialias: true, stencil: false, depth: true }}
-              onCreated={({ gl }) => {
-                gl.setClearColor(0x000000, 0);
-              }}
-            >
-              <ambientLight intensity={0.6} color="#8090ff" />
-              <directionalLight position={[3, 5, 4]} intensity={1.8} />
-              <pointLight position={[-4, 2, 1]} intensity={1.5} color="#00d4ff" />
-              <pointLight position={[4, -2, -1]} intensity={1.0} color="#7c3aed" />
-              <ErrorBoundary
-                fallback={<ModelFallback scale={1.2} color="#00d4ff" />}
-                onError={(err) => {
-                  if (import.meta.env.DEV) {
-                    console.warn("[3D] Avatar failed to load (/models/Avatar.glb):", err?.message ?? err);
-                  }
-                }}
-              >
-                <Suspense fallback={<ModelFallback scale={1.2} color="#00d4ff" />}>
-                  <Avatar scale={[2, 2, 2]} position={[0, -1.2, 0]} rotation={[0, -0.5, 0]} />
-                </Suspense>
-              </ErrorBoundary>
-              {ORBIT_MODELS.map((m, i) => (
-                <FloatingIconSlot key={i} {...m} />
-              ))}
-            </Canvas>
           </div>
         </div>
 
@@ -427,7 +280,7 @@ function AboutSection() {
             <div className="glass-card col-span-2 overflow-hidden" style={{ borderLeft: "3px solid var(--cyan)" }}>
               <div className="flex flex-col sm:flex-row items-center gap-0">
                 <div className="w-full sm:w-40 shrink-0">
-                  <MiniModelCanvas url={M.aiBrain} height={130} scale={1.0} />
+                  <IconTile icon={M.aiBrain} height={130} />
                 </div>
                 <div className="p-5">
                   <p className="font-oxanium text-sm mb-2" style={{ color: "var(--cyan)" }}>Engineering Philosophy</p>
@@ -482,7 +335,7 @@ function TechStackSection() {
                 {/* Mini model viewer */}
                 {catModel && (
                   <div className="rounded-xl overflow-hidden mb-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <MiniModelCanvas url={catModel.url} height={110} scale={catModel.scale} />
+                    <IconTile icon={catModel.url} height={110} />
                   </div>
                 )}
 
@@ -708,7 +561,7 @@ function AISection() {
             >
               {/* 3D model per capability */}
               <div className="rounded-xl overflow-hidden mb-4" style={{ background: "rgba(124,58,237,0.05)", border: "1px solid rgba(124,58,237,0.12)" }}>
-                <MiniModelCanvas url={AI_CAP_MODELS[i] || M.aiCore} height={130} scale={1.1} />
+                <IconTile icon={AI_CAP_MODELS[i] || M.aiCore} height={130} />
               </div>
 
               <div className="text-2xl sm:text-3xl mb-3">{cap.icon}</div>
@@ -847,7 +700,7 @@ function InnovationSection() {
               >
                 <div className="h-0.5 w-full" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
                 <div style={{ background: "rgba(255,255,255,0.02)" }}>
-                  <MiniModelCanvas url={item.url} height={140} scale={1.1} />
+                  <IconTile icon={item.url} height={140} />
                 </div>
                 <div className="p-5">
                   <p className="font-oxanium font-semibold text-sm mb-2" style={{ color }}>{item.label}</p>
@@ -869,7 +722,7 @@ function ResumeSection() {
   const [ref, visible] = useFadeIn(0.1);
 
   const links = [
-    { icon: "📄", title: "Download Resume", subtitle: "Updated May 2026", href: "C:\\Users\\genpr\\Documents\\Professional Documents\\Resume_Nillama_2026.pdf", accent: "cyan" },
+    { icon: "📄", title: "View Full CV", subtitle: "cv-nillama-2026.vercel.app", href: "https://cv-nillama-2026.vercel.app", accent: "cyan" },
     { icon: "⌨️", title: "GitHub Profile",  subtitle: "github.com/FrancisGarryNillama", href: socialLinks.find((s) => s.name === "GitHub")?.url || "#", accent: "cyan" },
     { icon: "💼", title: "LinkedIn",         subtitle: "Connect professionally", href: socialLinks.find((s) => s.name === "LinkedIn")?.url || "#", accent: "violet" },
   ];
@@ -938,7 +791,7 @@ function ContactSection() {
             {/* Left model */}
             <div className="hidden lg:flex items-center justify-center overflow-hidden min-h-0"
               style={{ background: "rgba(0,212,255,0.03)", borderRight: "1px solid var(--border-cyan)" }}>
-              <MiniModelCanvas url={M.emailIcon} height={220} scale={1.2} />
+              <IconTile icon={M.emailIcon} height={220} />
             </div>
 
             {/* Center text */}
@@ -976,7 +829,7 @@ function ContactSection() {
             {/* Right model */}
             <div className="hidden lg:flex items-center justify-center overflow-hidden min-h-0"
               style={{ background: "rgba(124,58,237,0.03)", borderLeft: "1px solid var(--border-violet)" }}>
-              <MiniModelCanvas url={M.teamWorkflow} height={220} scale={1.2} />
+              <IconTile icon={M.teamWorkflow} height={220} />
             </div>
           </div>
         </div>

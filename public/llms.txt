@@ -1,0 +1,48 @@
+# Francis Garry Nillama — Full-Stack Software Engineer (AI-Integrated Systems)
+
+> Portfolio of Francis Garry Nillama, a full-stack software engineer based in Cebu, Philippines (BS Information Technology, CIT-U). He builds production web systems in TypeScript/Node, Next.js/React and PostgreSQL (row-level security), and integrates AI: agentic remediation on the Claude Agent SDK, OCR/LLM document pipelines and RAG. He is open to full-time roles (remote, onsite or relocation) in software engineering, AI engineering and technical support.
+
+Key facts:
+
+- Location: Cebu, Philippines. Open to remote work, to onsite work, and to relocating.
+- Experience:
+  - Software Engineer / IT Executive Assistant / OJT Mentor at Lifewood Philippines (Jun–Oct 2026).
+  - Software Engineering Intern at Lifewood Data Technology (Feb–May 2026).
+  - About 2 years in BPO / operations roles before that.
+- Core stack: TypeScript, Node 22, Next.js 14/15, React 18/19, Express 5, Fastify 5, Django/DRF, Spring Boot, PostgreSQL 16 + RLS, Supabase, Redis, Docker, GitHub Actions, Vercel.
+- AI: Claude Agent SDK, OpenAI/Anthropic APIs, RAG (LangChain, ChromaDB, Ollama), EasyOCR, OpenCV, pgvector.
+
+## Main pages
+
+- [Home](https://digital-profile-rouge.vercel.app/): profile summary, tech stack, featured projects, AI capabilities, work experience and contact.
+- [Projects](https://digital-profile-rouge.vercel.app/projects): the full engineering showcase, with problem, architecture and challenges for each system.
+- [Contact](https://digital-profile-rouge.vercel.app/contact): contact form and links.
+
+## Featured projects
+
+- **Pulse Dialer.** An independent, multi-tenant predictive dialer and contact-centre platform.
+  - Built on Asterisk 22 ARI, Fastify 5 + Zod/OpenAPI, PostgreSQL 16 with RLS on every table, Redis Streams, and a Next.js 15 agent UI with a JsSIP softphone.
+  - Event-driven end to end.
+- **LifewoodPH HRIS.** Primary engineer (219 of 330 commits) on a company-wide HR information system.
+  - Covers intake and onboarding, RFID attendance, leave-credit accrual, overtime/COE/BIR requests and separation.
+  - Next.js 15, Express 5, Supabase Postgres + RLS, and shared Zod contracts.
+- **Lifewood-Nexus.** Sole author of an IT ticketing system with agentic auto-remediation.
+  - A Python worker on the Claude Agent SDK fixes and tests bugs on isolated git branches behind a hook-based gatekeeper.
+  - Merges are review-gated.
+- **AngelHost & Keel.** Property management for multi-market short-term-rental portfolios.
+  - Lead contributor on AngelHost (144 of 227 commits).
+  - Next.js + Supabase, with a multi-transport ingestion core (Microsoft Graph, Power Automate, webhooks) and the Channex API.
+- **Lifewood AI Agent (V1–V4).** An AI expense-intelligence platform: receipt OCR, LLM analytics, conversational querying, and Excel/PDF export.
+- **OLTEK Contract Extraction.** A company hackathon project: layered contract extraction (deterministic → layout graph → AI fallback) with per-field confidence scoring.
+- **Cred-It.** A capstone project that uses OCR on transcripts of records and fuzzy curriculum matching for transferee accreditation.
+- **Pearl27 Automation.** Browser automation with Selenium fallback, LLM-drafted responses and audit logging.
+
+## Profiles
+
+- [GitHub](https://github.com/FrancisGarryNillama)
+- [LinkedIn](https://www.linkedin.com/in/francis-garry-nillama-b869a1333/)
+- [Full CV](https://cv-nillama-2026.vercel.app)
+
+## Optional
+
+- [Sitemap](https://digital-profile-rouge.vercel.app/sitemap.xml)

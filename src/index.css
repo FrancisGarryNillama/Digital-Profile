@@ -544,3 +544,90 @@ button { font-family: inherit; }
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
 .delay-600 { animation-delay: 0.6s; }
+/* ===========================
+   SVG ICON VISUALS (replaced 3D models)
+=========================== */
+.icon-tile { overflow: hidden; }
+.icon-tile-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px dashed rgba(0, 212, 255, 0.18);
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.07) 0%, rgba(124, 58, 237, 0.04) 45%, transparent 70%);
+  animation: spin 28s linear infinite;
+}
+.icon-float { position: relative; animation: iconFloat 6s ease-in-out infinite; }
+.icon-glow  { filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.35)) drop-shadow(0 0 22px rgba(124, 58, 237, 0.25)); }
+.icon-tile:hover .icon-float { animation-duration: 2.4s; }
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-8px) rotate(-4deg); }
+}
+
+/* Hero orbit */
+.hero-orbit {
+  position: relative;
+  width: min(92%, 500px);
+  aspect-ratio: 1 / 1;
+}
+.hero-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px dashed rgba(0, 212, 255, 0.16);
+  animation: spin 48s linear infinite;
+}
+.hero-ring-0 { inset: 0; }
+.hero-ring-1 { inset: 17%; border-color: rgba(124, 58, 237, 0.2); animation-duration: 36s; animation-direction: reverse; }
+.hero-orbit-slot { position: absolute; inset: 0; transform: rotate(var(--a)); }
+.hero-orbit-pos {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%) rotate(calc(-1 * var(--a)));
+}
+.hero-orbit-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: rgba(10, 12, 30, 0.85);
+  border: 1px solid rgba(0, 212, 255, 0.22);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.15);
+  animation: spin 48s linear infinite reverse;
+}
+.hero-ring-1 .hero-orbit-chip { animation-duration: 36s; animation-direction: normal; border-color: rgba(167, 139, 250, 0.3); }
+.hero-core {
+  position: absolute;
+  inset: 34%;
+  border-radius: 9999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: radial-gradient(circle at 30% 30%, rgba(0, 212, 255, 0.18), rgba(124, 58, 237, 0.14) 60%, rgba(3, 3, 8, 0.9));
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+.hero-core-text { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; }
+
+@media (max-width: 640px) {
+  .hero-orbit-chip { width: 44px; height: 44px; border-radius: 12px; }
+  .hero-orbit-chip svg { width: 22px; height: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-tile-ring, .icon-float, .hero-ring, .hero-orbit-chip, .hero-core { animation: none !important; }
+}
+
+/* Contact visual reacts to the form (replaces the old fox animations) */
+.contact-walk .icon-float { animation-duration: 2.2s; }
+.contact-hit  .icon-float { animation: sendOff 1.2s ease-in-out infinite; }
+@keyframes sendOff {
+  0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  60%  { transform: translate(40px, -40px) rotate(8deg); opacity: 0; }
+  61%  { transform: translate(-30px, 30px); opacity: 0; }
+  100% { transform: translate(0, 0); opacity: 1; }
+}

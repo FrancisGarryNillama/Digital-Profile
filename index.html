@@ -2,12 +2,102 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/src/assets/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Francis Garry Nillama | Portfolio</title>
+
+    <!-- Primary SEO -->
+    <title>Francis Garry Nillama | Full-Stack Software Engineer · AI Systems</title>
+    <meta name="description" content="Portfolio of Francis Garry Nillama, a full-stack software engineer in Cebu, Philippines. TypeScript, Next.js, React, Node and PostgreSQL with RLS, plus AI integration: Claude Agent SDK, OCR/LLM pipelines and RAG." />
+    <meta name="author" content="Francis Garry Nillama" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://digital-profile-rouge.vercel.app/" />
+    <meta name="theme-color" content="#030308" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Machine-readable summaries -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="text/plain" title="LLM summary" href="/llms.txt" />
+
+    <!-- Open Graph / social previews -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="Francis Garry Nillama" />
+    <meta property="og:title" content="Francis Garry Nillama | Full-Stack Software Engineer · AI Systems" />
+    <meta property="og:description" content="Production systems in TypeScript, Next.js and PostgreSQL, plus agentic AI on the Claude Agent SDK. HRIS, property management, a predictive dialer and document intelligence." />
+    <meta property="og:url" content="https://digital-profile-rouge.vercel.app/" />
+    <meta property="og:locale" content="en_PH" />
+    <meta property="profile:first_name" content="Francis Garry" />
+    <meta property="profile:last_name" content="Nillama" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Francis Garry Nillama | Full-Stack Software Engineer" />
+    <meta name="twitter:description" content="TypeScript · Next.js · PostgreSQL RLS · Agentic AI. Portfolio and featured systems." />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://digital-profile-rouge.vercel.app/#person",
+            "name": "Francis Garry Nillama",
+            "jobTitle": "Full-Stack Software Engineer",
+            "description": "Full-stack software engineer building production web systems and AI-integrated tooling.",
+            "url": "https://digital-profile-rouge.vercel.app/",
+            "address": { "@type": "PostalAddress", "addressLocality": "Cebu", "addressCountry": "PH" },
+            "alumniOf": { "@type": "CollegeOrUniversity", "name": "Cebu Institute of Technology – University" },
+            "knowsAbout": [
+              "TypeScript", "Node.js", "Next.js", "React", "PostgreSQL", "Row-Level Security",
+              "Supabase", "Django", "Claude Agent SDK", "Retrieval-Augmented Generation",
+              "OCR", "Asterisk ARI", "Docker"
+            ],
+            "sameAs": [
+              "https://github.com/FrancisGarryNillama",
+              "https://www.linkedin.com/in/francis-garry-nillama-b869a1333/",
+              "https://cv-nillama-2026.vercel.app"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://digital-profile-rouge.vercel.app/#website",
+            "url": "https://digital-profile-rouge.vercel.app/",
+            "name": "Francis Garry Nillama — Portfolio",
+            "inLanguage": "en",
+            "about": { "@id": "https://digital-profile-rouge.vercel.app/#person" }
+          },
+          {
+            "@type": "ProfilePage",
+            "url": "https://digital-profile-rouge.vercel.app/",
+            "mainEntity": { "@id": "https://digital-profile-rouge.vercel.app/#person" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Crawlable fallback for bots and users without JavaScript -->
+    <noscript>
+      <main style="font-family:system-ui,sans-serif;max-width:720px;margin:40px auto;padding:0 16px;color:#e5e7eb;background:#030308">
+        <h1>Francis Garry Nillama — Full-Stack Software Engineer</h1>
+        <p>Full-stack software engineer in Cebu, Philippines, working in TypeScript, Next.js, React, Node and PostgreSQL with row-level security. Also builds AI integrations: the Claude Agent SDK, OCR/LLM pipelines and RAG.</p>
+        <h2>Featured projects</h2>
+        <ul>
+          <li>Pulse Dialer: a multi-tenant predictive dialer on Asterisk 22 ARI, Fastify and PostgreSQL RLS.</li>
+          <li>LifewoodPH HRIS: primary engineer on a company-wide HR information system.</li>
+          <li>Lifewood-Nexus: IT ticketing with agentic auto-remediation on the Claude Agent SDK.</li>
+          <li>AngelHost &amp; Keel: property management for multi-market rental portfolios.</li>
+        </ul>
+        <p>
+          <a href="https://github.com/FrancisGarryNillama">GitHub</a> ·
+          <a href="https://www.linkedin.com/in/francis-garry-nillama-b869a1333/">LinkedIn</a> ·
+          <a href="https://cv-nillama-2026.vercel.app">Full CV</a> ·
+          <a href="/llms.txt">Plain-text summary</a>
+        </p>
+      </main>
+    </noscript>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

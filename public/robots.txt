@@ -1,0 +1,23 @@
+# robots.txt — https://digital-profile-rouge.vercel.app
+# Portfolio of Francis Garry Nillama. Public content; search engines and
+# AI assistants are welcome to index and cite it.
+
+User-agent: *
+Allow: /
+Disallow: /modeltest
+
+# AI / LLM crawlers — explicitly allowed (see /llms.txt for a plain-text summary)
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+Allow: /
+Disallow: /modeltest
+
+Sitemap: https://digital-profile-rouge.vercel.app/sitemap.xml

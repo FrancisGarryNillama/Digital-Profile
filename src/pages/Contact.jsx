@@ -1,10 +1,9 @@
 import emailjs from "@emailjs/browser";
-import { Suspense, useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useRef, useState } from "react";
 
-import { Fox } from "../models";
+import { IconTile } from "../components/TechIcon";
 import useAlert from "../hooks/useAlert";
-import { Alert, Loader, Footer } from "../components";
+import { Alert, Footer } from "../components";
 import { hero, socialLinks } from "../constants";
 
 const Contact = () => {
@@ -147,33 +146,9 @@ const Contact = () => {
 
         <div className='lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px] relative'>
           <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent z-10 pointer-events-none" />
-          <Canvas
-            className="absolute inset-0 h-full w-full"
-            camera={{ position: [0, 0, 5], fov: 75 }}
-            gl={{ alpha: true, antialias: true }}
-            onCreated={({ gl }) => {
-              gl.setClearColor(0x000000, 0);
-            }}
-          >
-            <directionalLight position={[0, 0, 1]} intensity={2.5} />
-            <ambientLight intensity={1} />
-            <pointLight position={[5, 10, 0]} intensity={2} />
-            <spotLight
-              position={[10, 10, 10]}
-              angle={0.15}
-              penumbra={1}
-              intensity={2}
-            />
-
-            <Suspense fallback={<Loader />}>
-              <Fox
-                currentAnimation={currentAnimation}
-                position={[0.5, 0.35, 0]}
-                rotation={[12.629, -0.6, 0]}
-                scale={[0.5, 0.5, 0.5]}
-              />
-            </Suspense>
-          </Canvas>
+          <div className={`absolute inset-0 contact-visual contact-${currentAnimation}`}>
+            <IconTile icon="send" height="100%" size={150} />
+          </div>
         </div>
       </section>
       <Footer />
