@@ -175,8 +175,8 @@ export function TechIcon({ name, size = 48, strokeWidth = 1.5, className = "", s
     >
       <defs>
         <linearGradient id={`g${gid}`} x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#00d4ff" />
-          <stop offset="1" stopColor="#a78bfa" />
+          <stop offset="0" style={{ stopColor: "var(--icon-a)" }} />
+          <stop offset="1" style={{ stopColor: "var(--icon-b)" }} />
         </linearGradient>
       </defs>
       {glyph}

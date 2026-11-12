@@ -98,7 +98,10 @@ const THEME = {
   violet: { border: "var(--border-violet)", badge: "badge-violet", glow: "rgba(124,58,237,0.12)" },
   amber:  { border: "rgba(240,165,0,0.2)",  badge: "badge-amber",  glow: "rgba(240,165,0,0.10)" },
 };
-const ACCENT = { cyan: "#00d4ff", violet: "#a78bfa", amber: "#fbbf24" };
+const ACCENT = { cyan: "var(--cyan)", violet: "var(--violet-text)", amber: "var(--amber-text)" };
+// Readable text colour for a hard-coded hex accent, in either theme
+const TEXT_TONE = { "#00d4ff": "var(--cyan)", "#7c3aed": "var(--violet-text)", "#a78bfa": "var(--violet-text)", "#f0a500": "var(--amber-text)", "#f59e0b": "var(--amber-text)", "#fbbf24": "var(--amber-text)" };
+const tone = (hex) => TEXT_TONE[hex] || hex;
 
 // Models mapped to skill categories (shown as section eye-candy)
 const CATEGORY_MODELS = {
@@ -334,7 +337,7 @@ function TechStackSection() {
               >
                 {/* Mini model viewer */}
                 {catModel && (
-                  <div className="rounded-xl overflow-hidden mb-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="rounded-xl overflow-hidden mb-4" style={{ background: "var(--surface-subtle)", border: "1px solid var(--hairline)" }}>
                     <IconTile icon={catModel.url} height={110} />
                   </div>
                 )}
@@ -436,7 +439,7 @@ function ProjectsSection() {
 
                   {p.challenges?.[0] && (
                     <div className="p-3 rounded-lg mb-5 text-xs"
-                      style={{ background: "rgba(255,255,255,0.03)", borderLeft: `2px solid ${color}`, color: "var(--text-secondary)" }}>
+                      style={{ background: "var(--surface-subtle)", borderLeft: `2px solid ${color}`, color: "var(--text-secondary)" }}>
                       <span className="font-oxanium font-semibold" style={{ color }}>Challenge: </span>
                       {p.challenges[0]}
                     </div>
@@ -511,7 +514,7 @@ function AISection() {
 
       <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
         <div className="text-center mb-12 sm:mb-14" style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}>
-          <p className="section-label justify-center" style={{ color: "#a78bfa" }}>What Sets Me Apart</p>
+          <p className="section-label justify-center" style={{ color: "var(--violet-text)" }}>What Sets Me Apart</p>
           <h2 className="section-title">
             AI & Automation{" "}
             <span style={{ background: "linear-gradient(135deg, #7c3aed, #00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -536,12 +539,12 @@ function AISection() {
                   style={{
                     background: `rgba(${node.color === "#00d4ff" ? "0,212,255" : node.color === "#7c3aed" ? "124,58,237" : node.color === "#f0a500" ? "240,165,0" : "71,85,105"},0.12)`,
                     border: `1px solid ${node.color}30`,
-                    color: node.color,
+                    color: tone(node.color),
                   }}
                 >
                   {node.label}
                 </div>
-                {i < arr.length - 1 && <span className="text-slate-600 text-base sm:text-lg">→</span>}
+                {i < arr.length - 1 && <span className="text-base sm:text-lg" style={{ color: "var(--text-muted)" }}>→</span>}
               </div>
             ))}
           </div>
@@ -615,13 +618,13 @@ function ExperienceSection() {
                   <h3 className="font-oxanium font-semibold text-sm sm:text-base" style={{ color: "var(--text-primary)" }}>
                     {exp.title}
                   </h3>
-                  <p className="text-xs sm:text-sm mb-4 mt-1" style={{ color: exp.iconColor, fontFamily: "'Oxanium', monospace" }}>
+                  <p className="text-xs sm:text-sm mb-4 mt-1" style={{ color: tone(exp.iconColor), fontFamily: "'Oxanium', monospace" }}>
                     {exp.company}
                   </p>
                   <ul className="space-y-2">
                     {exp.points.map((point, pi) => (
                       <li key={pi} className="text-xs sm:text-sm flex items-start gap-2" style={{ color: "var(--text-secondary)" }}>
-                        <span style={{ color: exp.iconColor, marginTop: 2, flexShrink: 0 }}>▸</span>
+                        <span style={{ color: tone(exp.iconColor), marginTop: 2, flexShrink: 0 }}>▸</span>
                         {point}
                       </li>
                     ))}
@@ -699,7 +702,7 @@ function InnovationSection() {
                 }}
               >
                 <div className="h-0.5 w-full" style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
-                <div style={{ background: "rgba(255,255,255,0.02)" }}>
+                <div style={{ background: "var(--surface-subtle)" }}>
                   <IconTile icon={item.url} height={140} />
                 </div>
                 <div className="p-5">
@@ -796,7 +799,7 @@ function ContactSection() {
 
             {/* Center text */}
             <div className="p-8 sm:p-12 lg:p-16 text-center flex flex-col items-center justify-center">
-              <p className="section-label justify-center mb-4" style={{ color: "#a78bfa" }}>Open to Opportunities</p>
+              <p className="section-label justify-center mb-4" style={{ color: "var(--violet-text)" }}>Open to Opportunities</p>
               <h2 className="section-title mb-4">
                 Interested in <span className="gradient-text">AI Systems</span>,<br />
                 Automation, or Scalable Engineering?

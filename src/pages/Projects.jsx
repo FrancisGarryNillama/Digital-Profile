@@ -43,7 +43,7 @@ const Projects = () => {
                   {project.description}
                 </p>
 
-                <div className="bg-white/5 rounded-lg p-4 mb-6">
+                <div className="rounded-lg p-4 mb-6" style={{ background: "var(--surface-subtle)" }}>
                   <h4 className="text-xs font-oxanium font-bold uppercase mb-2 opacity-50">Core Challenge</h4>
                   <p className="text-xs text-secondary italic">"{project.challenges[0]}"</p>
                 </div>
@@ -88,7 +88,7 @@ const Projects = () => {
           <h3 className="font-oxanium text-xl font-bold mb-8 opacity-80">Auxiliary Projects</h3>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
             {tier2.map((project) => (
-              <div key={project.id} className="project-card-sm p-6 flex flex-col border-white/5 bg-white/5">
+              <div key={project.id} className="project-card-sm p-6 flex flex-col">
                 <div 
                   className="w-8 h-0.5 mb-4" 
                   style={{ background: project.theme === 'violet' ? 'var(--violet)' : 'var(--cyan)' }}

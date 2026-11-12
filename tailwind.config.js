@@ -5,7 +5,7 @@ export default {
     extend: {
       colors: {
         dark: {
-          primary: "#030308",
+          primary: "var(--bg-primary)",
           secondary: "#0a0a14",
           card: "#0f0f1e",
         },

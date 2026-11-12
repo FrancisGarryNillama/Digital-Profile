@@ -11,6 +11,18 @@
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="https://digital-profile-rouge.vercel.app/" />
     <meta name="theme-color" content="#030308" />
+    <meta name="color-scheme" content="dark light" />
+    <!-- Apply saved / system theme before first paint (no flash) -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+          document.documentElement.dataset.theme = t;
+          if (t === "light") document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f5f7fb");
+        } catch (e) { document.documentElement.dataset.theme = "dark"; }
+      })();
+    </script>
     <meta name="google-site-verification" content="-qrRbOuvwdYMlEvrItyHxTi0mEwIKZHa7yO7SmYEk6A" />
 
     <!-- Icons -->

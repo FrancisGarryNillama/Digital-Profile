@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { hero } from "../constants";
+import ThemeToggle from "./ThemeToggle";
 
 const NAV_ITEMS = [
   { label: "About",      id: "about"      },
@@ -71,7 +72,7 @@ const Navbar = () => {
           >
             {hero.initials}
           </div>
-          <span className="font-oxanium font-semibold text-white text-sm hidden sm:block tracking-wide">
+          <span className="font-oxanium font-semibold text-sm hidden sm:block tracking-wide" style={{ color: "var(--text-primary)" }}>
             {hero.name.split(" ")[0]}
             <span className="gradient-text">
               {hero.name.includes(" ") ? " " + hero.name.split(" ").slice(1).join(" ") : ""}
@@ -96,13 +97,18 @@ const Navbar = () => {
             </button>
           ))}
 
+          <ThemeToggle />
+
           <button
             onClick={() => scrollTo("contact")}
-            className="btn-primary text-xs px-5 py-2.5 ml-2"
+            className="btn-primary text-xs px-5 py-2.5"
           >
             <span>Let's Talk</span>
           </button>
         </nav>
+
+        {/* ── Mobile theme toggle ── */}
+        <ThemeToggle className="md:hidden ml-auto mr-3 z-10" />
 
         {/* ── Mobile Hamburger ── */}
         <button
@@ -132,7 +138,7 @@ const Navbar = () => {
         style={{
           pointerEvents: mobileOpen ? "auto" : "none",
           opacity:       mobileOpen ? 1 : 0,
-          background:    "rgba(3,3,8,0.96)",
+          background:    "var(--drawer-bg)",
           backdropFilter: "blur(24px)",
         }}
       >
@@ -161,7 +167,9 @@ const Navbar = () => {
 
         {/* Close X */}
         <button
-          className="absolute top-5 right-6 text-slate-400 hover:text-white text-2xl font-light"
+          className="absolute top-5 right-6 text-2xl font-light"
+          style={{ color: "var(--text-secondary)" }}
+          aria-label="Close menu"
           onClick={() => setMobileOpen(false)}
         >
           ✕
