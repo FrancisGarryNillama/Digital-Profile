@@ -14,14 +14,14 @@ const About = () => {
       <section className='section-container'>
         <p className="section-label">Identity</p>
         <h1 className='section-title'>
-          Software Engineer & <br />
-          <span className='gradient-text'>AI Systems Architect</span>
+          AI Solutions <br />
+          <span className='gradient-text'>Engineer</span>
         </h1>
 
         <div className='mt-5 flex flex-col gap-3 section-subtitle'>
           <p>
-            Based in Croatia, I specialize in building autonomous systems, 
-            intelligent document processing pipelines, and high-performance full-stack applications.
+            Based in Cebu, Philippines, I build AI agents, LLM integrations, RAG and document-intelligence
+            pipelines and Python automation — and the full-stack applications that ship them.
           </p>
         </div>
 

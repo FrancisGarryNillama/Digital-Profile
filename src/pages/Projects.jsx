@@ -10,13 +10,14 @@ const Projects = () => {
       <section className='section-container'>
         <p className="section-label">Portfolio</p>
         <h1 className='section-title'>
-          Engineering <br />
+          AI Solutions <br />
           <span className='gradient-text'>Showcase</span>
         </h1>
 
         <p className='section-subtitle mt-2 mb-16'>
-          A collection of systems designed to solve complex data challenges, 
-          from telephony and HR systems to agentic remediation and document intelligence.
+          AI solutions first — agentic remediation, LLM-powered expense intelligence and document
+          intelligence — followed by the full-stack platforms that show I can ship them to production.
+          Each one is framed as problem, solution and outcome.
         </p>
 
         {/* Tier 1: Detailed Cards */}
@@ -30,7 +31,7 @@ const Projects = () => {
               <div className="p-8 flex flex-col flex-1">
                 <div className="mb-4">
                   <span className={`badge ${project.theme === 'violet' ? 'badge-violet' : project.theme === 'amber' ? 'badge-amber' : ''} mb-3`}>
-                    Featured System
+                    {project.kind || "Featured System"}
                   </span>
                   <h3 className="font-oxanium font-bold text-2xl">{project.name}</h3>
                   <p className="font-oxanium text-xs tracking-wider opacity-60 mt-1 uppercase" 
@@ -39,14 +40,26 @@ const Projects = () => {
                   </p>
                 </div>
 
-                <p className="text-secondary text-sm mb-6 leading-relaxed">
-                  {project.description}
-                </p>
+                {project.problem && (
+                  <div className="mb-4">
+                    <h4 className="text-xs font-oxanium font-bold uppercase mb-1 opacity-50">Problem</h4>
+                    <p className="text-secondary text-sm leading-relaxed">{project.problem}</p>
+                  </div>
+                )}
 
-                <div className="rounded-lg p-4 mb-6" style={{ background: "var(--surface-subtle)" }}>
-                  <h4 className="text-xs font-oxanium font-bold uppercase mb-2 opacity-50">Core Challenge</h4>
-                  <p className="text-xs text-secondary italic">"{project.challenges[0]}"</p>
+                <div className="mb-4">
+                  <h4 className="text-xs font-oxanium font-bold uppercase mb-1 opacity-50">
+                    {project.kind === "AI Solution" ? "AI Solution" : "Solution"}
+                  </h4>
+                  <p className="text-secondary text-sm leading-relaxed">{project.description}</p>
                 </div>
+
+                {project.outcome && (
+                  <div className="rounded-lg p-4 mb-6" style={{ background: "var(--surface-subtle)" }}>
+                    <h4 className="text-xs font-oxanium font-bold uppercase mb-2 opacity-50">Outcome</h4>
+                    <p className="text-xs text-secondary">{project.outcome}</p>
+                  </div>
+                )}
 
                 <div className="flex flex-wrap gap-2 mb-8 mt-auto">
                   {project.stack.map(s => (
@@ -85,7 +98,7 @@ const Projects = () => {
 
         {/* Tier 2: Compact Cards */}
         <div className="pt-10">
-          <h3 className="font-oxanium text-xl font-bold mb-8 opacity-80">Auxiliary Projects</h3>
+          <h3 className="font-oxanium text-xl font-bold mb-8 opacity-80">More AI & Automation Work</h3>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
             {tier2.map((project) => (
               <div key={project.id} className="project-card-sm p-6 flex flex-col">

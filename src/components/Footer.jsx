@@ -39,7 +39,7 @@ const Footer = () => {
 
           {/* Quick links */}
           <nav className="flex items-center gap-6">
-            {["about", "stack", "projects", "ai", "experience", "contact"].map((id) => (
+            {["about", "ai", "projects", "stack", "experience", "contact"].map((id) => (
               <button
                 key={id}
                 onClick={() => scrollTo(id)}

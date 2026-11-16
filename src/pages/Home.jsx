@@ -14,6 +14,7 @@ import {
   projects,
   aiCapabilities,
   experiences,
+  certifications,
   socialLinks,
   categoryAccent,
 } from "../constants";
@@ -233,10 +234,10 @@ function AboutSection() {
   const [ref, visible] = useFadeIn(0.08);
 
   const highlights = [
-    { value: "360+", label: "Commits on Lifewood systems" },
-    { value: "7",    label: "Production systems shipped"  },
-    { value: "9",    label: "Phases, one agentic platform" },
-    { value: "128",  label: "Commits on Pulse Dialer"     },
+    { value: "9",    label: "Phases, one agentic platform"   },
+    { value: "4",    label: "AI Agent production releases"   },
+    { value: "39",   label: "Users in a Cred-It usability study" },
+    { value: "430+", label: "Commits on Lifewood systems"    },
   ];
 
   return (
@@ -248,18 +249,18 @@ function AboutSection() {
           <div style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)", transition: "all .8s ease" }}>
             <p className="section-label">Who I Am</p>
             <h2 className="section-title">
-              Full-Stack Engineering<br />
+              AI Solutions<br />
               <span className="gradient-text">With Evidence</span><br />
               Attached
             </h2>
             <p className="section-subtitle mb-6">
-              Full-Stack Software Engineer at Lifewood Philippines — primary engineer on the company HRIS and property-management platform, sole author of an agentic IT-ticketing system, and independently building a predictive dialer on Asterisk 22 ARI.
+              AI Solutions Engineer who builds LLM systems other people actually operate — agentic workflows with tool use, retrieval over messy real-world documents, and the guard rails and runbooks that make non-developers willing to trust them. At Lifewood Philippines (Jun–Oct 2026) I was sole author of an agentic IT-remediation platform on the Claude Agent SDK and primary engineer on the company HRIS and property-management platform.
             </p>
             <p className="section-subtitle mb-8" style={{ color: "var(--text-muted)" }}>
-              Strict TypeScript, PostgreSQL row-level security, event-driven design, and commit histories that document findings as carefully as features. Before engineering: a Lifewood AI internship shipping OCR and LLM tooling, and two years in BPO that taught structured communication under pressure.
+              The full-stack side is what lets me ship them: Next.js, React and strict TypeScript, Supabase/PostgreSQL with row-level security, and Node and Python services. Before that: a Lifewood AI internship shipping OCR and LLM tooling, a BSIT from CIT-U, and two years in BPO that taught me to explain a technical decision in plain English. Based in Cebu, Philippines.
             </p>
             <div className="flex flex-wrap gap-2">
-              {["TypeScript / Node","Next.js / React","PostgreSQL + RLS","Supabase","Agentic AI","Asterisk ARI","Monorepos & CI"].map((s) => (
+              {["AI Agents","Claude / OpenAI APIs","RAG","Python Automation","Next.js / React","TypeScript","Supabase / PostgreSQL"].map((s) => (
                 <span key={s} className="skill-tag text-xs">{s}</span>
               ))}
             </div>
@@ -288,10 +289,28 @@ function AboutSection() {
                 <div className="p-5">
                   <p className="font-oxanium text-sm mb-2" style={{ color: "var(--cyan)" }}>Engineering Philosophy</p>
                   <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.7 }}>
-                    "Don't just automate tasks — build systems that think. Every pipeline I design is architected to be observable, recoverable, and intelligent at every layer."
+                    "Safety sits outside the model. Measure before you widen, keep a human on the review step, and make undo a git revert."
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* Certifications */}
+            <div className="glass-card col-span-2 p-5" style={{ borderLeft: "3px solid var(--violet-text)" }}>
+              <p className="font-oxanium text-sm mb-3" style={{ color: "var(--violet-text)" }}>AI Certifications</p>
+              <ul className="space-y-1.5">
+                {certifications.map((c) => (
+                  <li key={c.name} className="text-xs sm:text-sm flex items-start gap-2" style={{ color: "var(--text-secondary)" }}>
+                    <span style={{ color: "var(--violet-text)", flexShrink: 0 }}>▸</span>
+                    <span>
+                      {c.name}
+                      {(c.issuer || c.date) && (
+                        <span style={{ color: "var(--text-muted)" }}> — {[c.issuer, c.date].filter(Boolean).join(", ")}</span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -314,9 +333,9 @@ function TechStackSection() {
       <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
         <div className="text-center mb-12 sm:mb-16" style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}>
           <p className="section-label justify-center">Technical Depth</p>
-          <h2 className="section-title">Full-Spectrum <span className="gradient-text">Tech Stack</span></h2>
+          <h2 className="section-title">AI-First <span className="gradient-text">Tech Stack</span></h2>
           <p className="section-subtitle mx-auto text-center">
-            From AI model orchestration to production deployments — a complete engineering toolkit.
+            The AI layer up front — and the full-stack toolkit that ships it to production.
           </p>
         </div>
 
@@ -386,8 +405,9 @@ function ProjectsSection() {
           style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}
         >
           <div>
-            <p className="section-label">Engineering Showcase</p>
+            <p className="section-label">Solutions Showcase</p>
             <h2 className="section-title">Featured <span className="gradient-text">Projects</span></h2>
+            <p className="section-subtitle mt-2">AI solutions first — each framed as problem, solution and outcome.</p>
           </div>
           <Link to="/projects" className="btn-outline text-xs sm:text-sm self-start sm:self-auto whitespace-nowrap px-5 py-2.5">
             All Projects →
@@ -414,13 +434,25 @@ function ProjectsSection() {
                 <div className="p-5 sm:p-7">
                   <div className="flex items-start justify-between gap-4 mb-4">
                     <div>
-                      <span className={`${theme.badge} text-xs mb-2 inline-block`}>Tier 1 · Featured</span>
+                      <span className={`${theme.badge} text-xs mb-2 inline-block`}>{p.kind || "Featured"}</span>
                       <h3 className="font-oxanium font-bold text-lg sm:text-xl" style={{ color: "var(--text-primary)" }}>{p.name}</h3>
                       <p className="text-xs mt-1" style={{ color }}>{p.tagline}</p>
                     </div>
                   </div>
 
-                  <p className="text-sm mb-5" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>{p.description}</p>
+                  {p.problem && (
+                    <p className="text-sm mb-3" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>
+                      <span className="font-oxanium font-semibold" style={{ color: "var(--text-primary)" }}>Problem: </span>{p.problem}
+                    </p>
+                  )}
+                  <p className="text-sm mb-3" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>
+                    <span className="font-oxanium font-semibold" style={{ color: "var(--text-primary)" }}>{p.kind === "AI Solution" ? "AI solution: " : "Solution: "}</span>{p.description}
+                  </p>
+                  {p.outcome && (
+                    <p className="text-sm mb-5" style={{ color: "var(--text-secondary)", lineHeight: 1.7 }}>
+                      <span className="font-oxanium font-semibold" style={{ color: "var(--text-primary)" }}>Outcome: </span>{p.outcome}
+                    </p>
+                  )}
 
                   {p.metrics && (
                     <div className="flex flex-wrap gap-2 mb-5">
@@ -437,20 +469,15 @@ function ProjectsSection() {
                     </div>
                   )}
 
-                  {p.challenges?.[0] && (
-                    <div className="p-3 rounded-lg mb-5 text-xs"
-                      style={{ background: "var(--surface-subtle)", borderLeft: `2px solid ${color}`, color: "var(--text-secondary)" }}>
-                      <span className="font-oxanium font-semibold" style={{ color }}>Challenge: </span>
-                      {p.challenges[0]}
-                    </div>
-                  )}
 
                   <div className="flex flex-wrap gap-2 mb-6">
                     {p.stack.map((s) => <span key={s} className={theme.badge}>{s}</span>)}
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    <a href={p.github} target="_blank" rel="noopener noreferrer" className="btn-outline text-xs px-4 py-2">GitHub →</a>
+                    {p.github
+                      ? <a href={p.github} target="_blank" rel="noopener noreferrer" className="btn-outline text-xs px-4 py-2">GitHub →</a>
+                      : <span className="text-xs font-oxanium opacity-60 tracking-wider uppercase self-center">Private · Company system</span>}
                     {p.live && <a href={p.live} target="_blank" rel="noopener noreferrer" className="btn-primary text-xs px-4 py-2"><span>Live Demo</span></a>}
                   </div>
                 </div>
@@ -481,10 +508,14 @@ function ProjectsSection() {
                 <div className="flex flex-wrap gap-1 mb-4">
                   {p.stack.map((s) => <span key={s} className={`${theme.badge} text-xs`}>{s}</span>)}
                 </div>
-                <a href={p.github} target="_blank" rel="noopener noreferrer"
-                  className="text-xs font-oxanium font-semibold hover:opacity-80 transition-opacity" style={{ color }}>
-                  GitHub →
-                </a>
+                {p.github ? (
+                  <a href={p.github} target="_blank" rel="noopener noreferrer"
+                    className="text-xs font-oxanium font-semibold hover:opacity-80 transition-opacity" style={{ color }}>
+                    GitHub →
+                  </a>
+                ) : (
+                  <span className="text-xs font-oxanium opacity-60">Private · Company system</span>
+                )}
               </div>
             );
           })}
@@ -503,8 +534,8 @@ function AISection() {
   const pipelineNodes = [
     { label: "Ticket / Event / Doc",  color: "#475569" },
     { label: "Validate + Gate",       color: "#00d4ff" },
-    { label: "Agent / LLM Worker",    color: "#7c3aed" },
-    { label: "Review + Merge",        color: "#00d4ff" },
+    { label: "Agent / LLM + Tools",   color: "#7c3aed" },
+    { label: "Human Review",          color: "#00d4ff" },
     { label: "Postgres (RLS) + UI",   color: "#f0a500" },
   ];
 
@@ -514,15 +545,15 @@ function AISection() {
 
       <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-20 sm:py-28">
         <div className="text-center mb-12 sm:mb-14" style={{ opacity: visible ? 1 : 0, transition: "all .8s ease" }}>
-          <p className="section-label justify-center" style={{ color: "var(--violet-text)" }}>What Sets Me Apart</p>
+          <p className="section-label justify-center" style={{ color: "var(--violet-text)" }}>What I Deliver</p>
           <h2 className="section-title">
-            AI & Automation{" "}
+            AI Solutions{" "}
             <span style={{ background: "linear-gradient(135deg, #7c3aed, #00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Capabilities
             </span>
           </h2>
           <p className="section-subtitle mx-auto text-center">
-            Most developers build apps. I build intelligent systems that automate, reason, and scale.
+            Problem first, then the AI system that solves it — agents, LLM integrations, RAG and automation, shipped with the guard rails, evaluation and runbooks that let people trust it.
           </p>
         </div>
 
@@ -801,8 +832,8 @@ function ContactSection() {
             <div className="p-8 sm:p-12 lg:p-16 text-center flex flex-col items-center justify-center">
               <p className="section-label justify-center mb-4" style={{ color: "var(--violet-text)" }}>Open to Opportunities</p>
               <h2 className="section-title mb-4">
-                Interested in <span className="gradient-text">AI Systems</span>,<br />
-                Automation, or Scalable Engineering?
+                Need an <span className="gradient-text">AI Solution</span>,<br />
+                an LLM Integration, or Automation?
               </h2>
               <p className="section-subtitle mx-auto text-center mb-8">
                 Let's connect and build something intelligent together.
@@ -848,9 +879,9 @@ const Home = () => (
   <main className="w-full overflow-x-hidden">
     <HeroSection />
     <AboutSection />
-    <TechStackSection />
-    <ProjectsSection />
     <AISection />
+    <ProjectsSection />
+    <TechStackSection />
     <ExperienceSection />
     <InnovationSection />
     <ResumeSection />

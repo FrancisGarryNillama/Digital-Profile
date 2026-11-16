@@ -4,9 +4,9 @@ import { useLocation } from "react-router-dom";
 export const SITE_URL = "https://digital-profile-rouge.vercel.app";
 
 const DEFAULT = {
-  title: "Francis Garry Nillama | Full-Stack Software Engineer · AI Systems",
+  title: "Francis Garry Nillama | AI Solutions Engineer · Agents, LLMs & Automation",
   description:
-    "Portfolio of Francis Garry Nillama, a full-stack software engineer in Cebu, Philippines. TypeScript, Next.js, React, Node and PostgreSQL with RLS, plus AI integration: Claude Agent SDK, OCR/LLM pipelines and RAG.",
+    "Francis Garry Nillama, AI Solutions Engineer in Cebu, Philippines: AI agents on the Claude Agent SDK, Claude/OpenAI integrations, RAG and Python automation, shipped end to end with Next.js, TypeScript and Supabase/PostgreSQL.",
 };
 
 const ROUTES = {
@@ -14,12 +14,12 @@ const ROUTES = {
   "/projects": {
     title: "Projects | Francis Garry Nillama",
     description:
-      "Engineering showcase: a multi-tenant predictive dialer, a company HRIS, agentic IT ticketing on the Claude Agent SDK, property management and document-intelligence pipelines.",
+      "AI solutions showcase: agentic IT remediation on the Claude Agent SDK, an LLM expense-intelligence agent, OCR document intelligence, plus the full-stack platforms (HRIS, property management, a predictive dialer) that ship them.",
   },
   "/contact": {
     title: "Contact | Francis Garry Nillama",
     description:
-      "Get in touch with Francis Garry Nillama about full-stack, AI-engineering or technical-support roles. Open to remote work, onsite work and relocation.",
+      "Get in touch with Francis Garry Nillama about AI solutions engineering, LLM integration, automation or full-stack roles. Open to remote work, onsite work and relocation.",
   },
 };
 

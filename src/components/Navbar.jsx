@@ -4,11 +4,11 @@ import { hero } from "../constants";
 import ThemeToggle from "./ThemeToggle";
 
 const NAV_ITEMS = [
-  { label: "About",      id: "about"      },
-  { label: "Tech Stack", id: "stack"      },
-  { label: "Projects",   id: "projects"   },
-  { label: "AI Systems", id: "ai"         },
-  { label: "Experience", id: "experience" },
+  { label: "About",        id: "about"      },
+  { label: "AI Solutions", id: "ai"         },
+  { label: "Projects",     id: "projects"   },
+  { label: "Tech Stack",   id: "stack"      },
+  { label: "Experience",   id: "experience" },
 ];
 
 const Navbar = () => {
