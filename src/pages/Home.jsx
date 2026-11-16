@@ -58,8 +58,24 @@ function HeroOrbit() {
   return (
     <div className="hero-orbit" aria-hidden>
       <div className="hero-core">
-        <span className="font-oxanium font-bold gradient-text hero-core-text">{hero.initials}</span>
-        <TechIcon name="code" size={28} className="opacity-80" />
+        <svg className="hero-avatar" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="heroAvatarRing" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#00d4ff" />
+              <stop offset="100%" stopColor="#7c3aed" />
+            </linearGradient>
+            <clipPath id="heroAvatarClip">
+              <circle cx="100" cy="100" r="92" />
+            </clipPath>
+          </defs>
+          <image
+            href="/francis-avatar.webp"
+            x="8" y="8" width="184" height="184"
+            preserveAspectRatio="xMidYMid slice"
+            clipPath="url(#heroAvatarClip)"
+          />
+          <circle cx="100" cy="100" r="95" fill="none" stroke="url(#heroAvatarRing)" strokeWidth="4" />
+        </svg>
       </div>
       {[0, 1].map((ring) => (
         <div key={ring} className={`hero-ring hero-ring-${ring}`}>
