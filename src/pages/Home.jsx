@@ -238,6 +238,8 @@ function AboutSection() {
     { value: "4",    label: "AI Agent production releases"   },
     { value: "39",   label: "Users in a Cred-It usability study" },
     { value: "430+", label: "Commits on Lifewood systems"    },
+    { value: "7",    label: "Production systems shipped"     },
+    { value: "128",  label: "Commits on Pulse Dialer"        },
   ];
 
   return (
