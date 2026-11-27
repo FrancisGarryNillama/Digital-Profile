@@ -119,6 +119,29 @@ export const projects = [
     live: null,
   },
   {
+    id: 13,
+    tier: 1,
+    kind: "AI Solution",
+    name: "AIGC Training-Video Pipeline",
+    tagline: "Script-to-master AI video production with an agent QC panel",
+    problem:
+      "An enterprise client needed multi-module e-learning videos produced entirely with generative AI, where every frame had to match an approved script, a strict brand system and the source material word for word, and every revision had to survive formal client review rounds.",
+    description:
+      "Built the production pipeline from approved script to delivery master. Scenes are generated from versioned prompt packs with locked character references; Python tools composite, track and re-pin wardrobe details across shots so characters stay consistent; voice-over is mastered separately with word-level timing that drives captions and edit points; and graphics are rendered in headless Chrome and assembled with ffmpeg into 1080p H.264 masters.",
+    outcome:
+      "A panel of specialised Claude Code QC subagents checks every render against the script and brand rules: brand, accessibility, audio, continuity, editing, learning design and source tracing. Client feedback is parsed into versioned approval packs, so each round's changes trace back to a specific comment.",
+    architecture: ["Versioned script + prompt packs", "Locked character reference sheets", "Python compositing / optical-flow tracking", "Separate VO masters with word timings", "Headless-Chrome graphics → ffmpeg assembly", "Claude Code QC subagent panel"],
+    challenges: [
+      "Generated footage must never show invented legible text: documents, screens and IDs stay unreadable, and only approved on-screen copy is rendered.",
+      "No lip-sync by design, so one picture serves every future language variant and only the voice-over master changes.",
+    ],
+    metrics: ["10+ QC subagents", "Versioned review rounds", "1080p delivery masters"],
+    stack: ["Python", "ffmpeg", "Claude Code subagents", "Generative video & image", "TTS", "OpenCV", "Headless Chrome"],
+    theme: "violet",
+    github: null,
+    live: null,
+  },
+  {
     id: 3,
     tier: 1,
     kind: "AI Solution",

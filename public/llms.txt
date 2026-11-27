@@ -29,6 +29,9 @@ Key facts:
 - **Lifewood AI Agent (V1–V4).** Sole architect of an expense-intelligence platform.
   - Receipt OCR (~2–5 s), categorisation, an analytics dashboard (150–300 ms in production), an LLM agent for plain-language questions, and RAG over PDFs.
   - Shipped across four production releases and presented to the company CEO.
+- **AIGC Training-Video Pipeline.** Script-to-master generative-AI video production for enterprise e-learning.
+  - Locked character references, Python compositing and tracking for shot-to-shot consistency, word-timed voice-over masters, ffmpeg assembly to 1080p.
+  - A panel of specialised Claude Code QC subagents checks every render against script, brand and accessibility rules.
 - **Cred-It.** Lead author (team of five) of OCR-based transfer-credit evaluation for the CIT-U College of Computer Studies.
   - EasyOCR + OpenCV extraction and fuzzy matching against curricula, with faculty review.
   - Evaluated with 39 users: System Usability Scale 73.4 against a 68 benchmark.
